@@ -4,882 +4,495 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Südengland Roadtrip - POI Bewertungstabelle</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .sticky-col-1 { position: sticky; left: 0; z-index: 10; }
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        /* Custom scrollbar for better visual polish */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid me-2 fa-map-location-dot text-amber-400 text-2xl"></i>
-                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Südengland Roadtrip — POI & Ausflugsplaner</h1>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 mt-1">
-                        <p class="text-xs sm:text-sm text-indigo-200">Familienbewertung (2 Erwachsene, Kids 12J & 9J) • Skala 1 (Auf keinen Fall) bis 10 (Absolutes Muss)</p>
-                        <div id="sync-status" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-950 text-amber-300 border border-indigo-700/60">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Verbinde...
-                        </div>
-                    </div>
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">🇬🇧 Südengland Roadtrip 2026</h1>
+                <p class="text-xs sm:text-sm text-slate-300">Bewertungstabelle & Routenplaner (Familie: 2 Erwachsene, 2 Kinder - 12 & 9 J.)</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Sync Status Indicator -->
+                <div id="sync-status" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 cursor-pointer" onclick="openCloudConfigModal()" title="Klicken für Sync-Einstellungen">
+                    <span id="sync-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block"></span>
+                    <span id="sync-text">⚪ Lokal-Modus</span>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-excel text-sm"></i> Export für Google Sheets (CSV)
-                    </button>
-                    <button onclick="openCloudConfigModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition" title="Firebase Cloud-Sync einrichten">
-                        <i class="fa-solid fa-cloud"></i> Sync einrichten
-                    </button>
-                    <button onclick="loadDemoScores()" class="bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-semibold border border-indigo-500 flex items-center gap-2 transition">
-                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Beispielwerte laden
-                    </button>
-                    <button onclick="resetScores()" class="bg-slate-800 hover:bg-red-900 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-xs font-medium border border-slate-700 flex items-center gap-1 transition">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </button>
-                </div>
+
+                <!-- Action Buttons -->
+                <button onclick="openCloudConfigModal()" class="px-3 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 rounded-lg transition shadow">
+                    ☁️ Sync einrichten
+                </button>
+                <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 rounded-lg transition shadow">
+                    📥 CSV Export
+                </button>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
-
-        <!-- Statistics KPI Row -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wider block">Gesamt-POIs</span>
-                    <span id="stat-total-pois" class="text-2xl font-bold text-slate-800">59</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-between justify-center text-lg">
-                    <i class="fa-solid fa-compass"></i>
-                </div>
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Filter & Search Bar -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
+            <div class="w-full md:w-1/3">
+                <input type="text" id="search-input" oninput="filterPOIs()" placeholder="🔍 POI, Ort oder Kategorie suchen..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
-            
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wider block">Top Favoriten (≥8.0)</span>
-                    <span id="stat-top-favorites" class="text-2xl font-bold text-emerald-600">0</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-between justify-center text-lg">
-                    <i class="fa-solid fa-star"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wider block">Kinder-Highlights</span>
-                    <span id="stat-kids-favorites" class="text-2xl font-bold text-amber-600">0</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-between justify-center text-lg">
-                    <i class="fa-solid fa-child-reaching"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wider block">Bewertete Orte</span>
-                    <span id="stat-rated-count" class="text-2xl font-bold text-indigo-600">0 / 59</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-between justify-center text-lg">
-                    <i class="fa-solid fa-check-double"></i>
-                </div>
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                <select id="station-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                    <option value="ALL">Alle Etappen</option>
+                    <option value="1">Etappe 1: Dover - Rye - Brighton</option>
+                    <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
+                    <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
+                    <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
+                    <option value="5">Etappe 5: Salcombe & Heligan</option>
+                    <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
+                    <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
+                    <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
+                    <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
+                </select>
+                <select id="tag-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                    <option value="ALL">Alle Kategorien</option>
+                    <option value="Highlight">Top Highlight</option>
+                    <option value="Familie">Familienfokus</option>
+                    <option value="Geheimtipp">Geheimtipp</option>
+                    <option value="Kultur">Kultur & Geschichte</option>
+                    <option value="Natur">Natur & Landschaft</option>
+                </select>
             </div>
         </div>
 
-        <!-- Filter Controls Container -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4">
-            <div class="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
-                <!-- Search Bar -->
-                <div class="relative flex-grow max-w-md">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="search-input" oninput="applyFilters()" placeholder="POI, Ort oder Stichwort suchen..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                </div>
-
-                <!-- Dropdown Filters -->
-                <div class="flex flex-wrap gap-2 items-center">
-                    <!-- Stage Filter -->
-                    <select id="filter-stage" onchange="applyFilters()" class="px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium bg-slate-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="ALL">Alle Etappen (1 - 14)</option>
-                        <option value="1">Etappe 1: Dover – Rye</option>
-                        <option value="2">Etappe 2: Rye – Brighton</option>
-                        <option value="3">Etappe 3: Isle of Wight</option>
-                        <option value="4">Etappe 4: IoW – Bournemouth</option>
-                        <option value="5">Etappe 5: Jurassic Coast & Exeter</option>
-                        <option value="6-7">Etappe 6-7: Dartmoor Nationalpark</option>
-                        <option value="8">Etappe 8: Salcombe & Heligan</option>
-                        <option value="9">Etappe 9: Cornwall Südküste</option>
-                        <option value="10">Etappe 10: Tintagel & Clovelly</option>
-                        <option value="11">Etappe 11: Exmoor Nationalpark</option>
-                        <option value="12">Etappe 12: Somerset & Cheddar</option>
-                        <option value="13">Etappe 13: Stratford & Warwick</option>
-                        <option value="14">Etappe 14: Gloucester Cathedral & Dover</option>
-                    </select>
-
-                    <!-- Category Filter -->
-                    <select id="filter-category" onchange="applyFilters()" class="px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium bg-slate-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="ALL">Alle Kategorien</option>
-                        <option value="Monument">Monumente & Geschichte</option>
-                        <option value="Familien-Fokus">Familien- & Aktivitätsfokus</option>
-                        <option value="Geheimtipp">Geheimtipps & Nischen</option>
-                    </select>
-
-                    <!-- Pass Filter -->
-                    <select id="filter-pass" onchange="applyFilters()" class="px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium bg-slate-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="ALL">Alle Pässe / Kosten</option>
-                        <option value="English Heritage">English Heritage Pass</option>
-                        <option value="National Trust">National Trust Pass</option>
-                        <option value="Sonstige">Sonstige / Kostenfrei / Privat</option>
-                    </select>
-
-                    <!-- Sort Filter -->
-                    <select id="filter-sort" onchange="applyFilters()" class="px-3 py-2 border border-indigo-200 text-indigo-900 font-semibold rounded-lg text-xs bg-indigo-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="stage">Sortierung: Reiseroute (1-14)</option>
-                        <option value="avg-desc">Sortierung: Highest Score (Ø)</option>
-                        <option value="kids-desc">Sortierung: Kinder-Lieblinge (9+12J)</option>
-                        <option value="disagree">Sortierung: Grösste Meinungsverschiedenheit</option>
-                    </select>
-                </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs text-slate-500 font-medium">Gesamt POIs</div>
+                <div id="stat-total" class="text-2xl font-bold text-slate-800">59</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs text-slate-500 font-medium">Bewertet</div>
+                <div id="stat-rated" class="text-2xl font-bold text-indigo-600">0</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs text-slate-500 font-medium">Top Favoriten (>= 8.0)</div>
+                <div id="stat-favorites" class="text-2xl font-bold text-amber-500">0</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-xs text-slate-500 font-medium">Durchschnitt Note</div>
+                <div id="stat-avg" class="text-2xl font-bold text-emerald-600">-</div>
             </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-semibold border-b border-slate-200">
-                            <th class="py-3 px-3 w-12 text-center">Etappe</th>
-                            <th class="py-3 px-4 min-w-[220px]">POI / Sehenswürdigkeit</th>
-                            <th class="py-3 px-3 min-w-[130px]">Kategorie</th>
-                            <th class="py-3 px-2 text-center w-20 bg-indigo-50/50 border-l border-indigo-100">
-                                Erw. 1<br><span class="text-[10px] text-indigo-600 font-normal">(Mama)</span>
-                            </th>
-                            <th class="py-3 px-2 text-center w-20 bg-indigo-50/50">
-                                Erw. 2<br><span class="text-[10px] text-indigo-600 font-normal">(Papa)</span>
-                            </th>
-                            <th class="py-3 px-2 text-center w-20 bg-amber-50/50 border-l border-amber-100">
-                                Kind 1<br><span class="text-[10px] text-amber-700 font-normal">(12 Jahre)</span>
-                            </th>
-                            <th class="py-3 px-2 text-center w-20 bg-amber-50/50">
-                                Kind 2<br><span class="text-[10px] text-amber-700 font-normal">(9 Jahre)</span>
-                            </th>
-                            <th class="py-3 px-3 text-center w-20 bg-emerald-50/60 border-l border-emerald-100 font-bold">
-                                Ø Schnitt
-                            </th>
-                            <th class="py-3 px-3 min-w-[130px] text-center">Status / Konsens</th>
-                            <th class="py-3 px-4 min-w-[200px]">Notizen & Highlights</th>
+                        <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+                            <th class="p-3 w-12 text-center">#</th>
+                            <th class="p-3">POI & Standort</th>
+                            <th class="p-3 w-28">Kategorie</th>
+                            <th class="p-3 text-center w-20">Erw. 1</th>
+                            <th class="p-3 text-center w-20">Erw. 2</th>
+                            <th class="p-3 text-center w-20">Kind 1 (12J)</th>
+                            <th class="p-3 text-center w-20">Kind 2 (9J)</th>
+                            <th class="p-3 text-center w-20 bg-slate-200/60">Ø Schnitt</th>
+                            <th class="p-3 min-w-[180px]">Notizen / Anmerkungen</th>
+                            <th class="p-3 text-center w-24">Karte</th>
                         </tr>
                     </thead>
-                    <tbody id="poi-table-body" class="divide-y divide-slate-200 text-sm">
-                        <!-- Dynamic rows rendered via JavaScript -->
+                    <tbody id="poi-table-body" class="divide-y divide-slate-200">
+                        <!-- Dynamic POI Rows -->
                     </tbody>
                 </table>
             </div>
-            
-            <div id="no-results" class="hidden p-8 text-center text-slate-500">
-                <i class="fa-solid fa-filter-circle-xmark text-3xl mb-2 text-slate-400"></i>
-                <p class="font-medium">Keine POIs für die ausgewählten Filter gefunden.</p>
-                <button onclick="clearFilters()" class="mt-2 text-xs text-indigo-600 font-semibold hover:underline">Filter zurücksetzen</button>
-            </div>
         </div>
-
-        <!-- Instructional Guidance Box -->
-        <div class="bg-indigo-50/80 rounded-xl p-4 border border-indigo-100 text-xs text-indigo-900 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div class="flex items-start gap-3">
-                <i class="fa-solid fa-circle-info text-indigo-600 text-lg mt-0.5"></i>
-                <div>
-                    <h4 class="font-semibold text-indigo-950">Anleitung für eure Familienplanung:</h4>
-                    <p class="mt-0.5 text-indigo-800">
-                        1. Tragt für jedes Mitglied Werte von **1 (nicht interessiert)** bis **10 (Must-See)** ein. Eure Eingaben werden automatisch live im Cloud-Speicher und im Browser gesichert.<br>
-                        2. Ihr könnt die Anwendung auf euren Smartphones oder Tablets öffnen – Änderungen werden in Echtzeit synchronisiert!
-                    </p>
-                </div>
-            </div>
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="whitespace-nowrap px-3 py-1.5 bg-white border border-indigo-200 text-indigo-800 rounded-lg font-medium hover:bg-indigo-100 transition shadow-sm">
-                <i class="fa-solid fa-arrow-up me-1"></i> Nach oben
-            </button>
-        </div>
-
     </main>
 
-    <!-- Custom Reset Confirmation Modal -->
-    <div id="reset-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in duration-200">
-            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl mb-4 mx-auto">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="text-lg font-bold text-slate-900 text-center">Bewertungen zurücksetzen?</h3>
-            <p class="text-xs text-slate-500 text-center mt-2">
-                Möchtest du wirklich alle eingegebenen Familienbewertungen auf allen Geräten löschen?
+    <div id="cloud-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-900 mb-2">☁️ Firebase Echtzeit-Sync Konfiguration</h3>
+            <p class="text-xs text-slate-600 mb-4">
+                Füge hier euer Firebase Config-Objekt im JSON-Format ein, um die Echtzeit-Synchronisation zwischen allen Geräten der Familie zu aktivieren.
             </p>
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeResetModal()" class="flex-1 py-2 px-4 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
-                    Abbrechen
+            <textarea id="firebase-config-input" rows="7" class="w-full p-3 font-mono text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none mb-4" placeholder='{
+  "apiKey": "...",
+  "authDomain": "...",
+  "projectId": "...",
+  "storageBucket": "...",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+            
+            <div id="modal-msg" class="text-xs mb-4 hidden"></div>
+
+            <div class="flex justify-between items-center gap-2">
+                <button onclick="clearCloudConfig()" class="px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg transition">
+                    Zurück zum Lokal-Modus
                 </button>
-                <button onclick="confirmResetScores()" class="flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold shadow transition">
-                    Ja, zurücksetzen
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="closeCloudConfigModal()" class="px-4 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+                        Abbrechen
+                    </button>
+                    <button onclick="saveCloudConfig()" class="px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition shadow">
+                        Speichern & Verbinden
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Cloud Sync Config Modal -->
-    <div id="cloud-config-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                        <i class="fa-solid fa-cloud"></i>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900">Echtzeit Cloud-Sync einrichten</h3>
-                </div>
-                <button onclick="closeCloudConfigModal()" class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            
-            <p class="text-xs text-slate-600 mb-3">
-                Auf GitHub Pages benötigst du ein **kostenloses Firebase-Projekt** (100% kostenfrei), damit sich eure Handys & Laptops untereinander live synchronisieren.
-            </p>
-
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-700 space-y-1.5 mb-4">
-                <p class="font-semibold text-slate-900">So geht's in 2 Minuten:</p>
-                <ol class="list-decimal list-inside space-y-1 text-slate-600">
-                    <li>Gehe auf <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-600 underline font-medium">console.firebase.google.com</a> & erstelle ein Gratis-Projekt.</li>
-                    <li>Füge eine <strong>Web-App</strong> hinzu und kopiere das <code class="bg-slate-200 px-1 py-0.5 rounded">firebaseConfig</code> JSON.</li>
-                    <li>Aktiviere <strong>Firestore Database</strong> (im <em>Testmodus</em>) & <strong>Authentication</strong> (Methode: <em>Anonym</em>).</li>
-                </ol>
-            </div>
-
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Firebase Config JSON hier einfügen:</label>
-            <textarea id="firebase-config-input" rows="5" placeholder='{"apiKey": "AIzaSy...", "authDomain": "...", "projectId": "..."}' class="w-full text-xs font-mono p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-800 mb-4"></textarea>
-
-            <div class="flex gap-2">
-                <button onclick="saveCloudConfig()" class="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow transition">
-                    <i class="fa-solid fa-check me-1"></i> Speichern & Verbinden
-                </button>
-                <button onclick="clearCloudConfig()" class="py-2 px-3 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition" title="Zurücksetzen">
-                    Entfernen
-                </button>
-            </div>
-        </div>
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+        Statusmeldung
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Full Dataset of all 59 POIs extracted from the strategic itinerary guide
-        const ALL_POIS = [
+        // --- 59 POIs DATA ARRAY ---
+        const pois = [
             // Etappe 1
-            { id: 1, stageNum: 1, stage: "1", name: "Dover Castle & Secret Wartime Tunnels", category: "Monument", pass: "English Heritage", notes: "Normannischer Bergfried, Tunnel aus 2. Weltkrieg (Operation Dynamo)", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 2, stageNum: 1, stage: "1", name: "White Cliffs of Dover", category: "Monument", pass: "National Trust", notes: "Ikonische Kreidefelsen & Klippenwanderung", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 3, stageNum: 1, stage: "1", name: "Romney, Hythe & Dymchurch Railway", category: "Familien-Fokus", pass: "Sonstige", notes: "Schmalspurdampfbahn (1:3) durch die Küstenlandschaft", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 4, stageNum: 1, stage: "1", name: "Rye Altstadt & Ypres Tower", category: "Monument", pass: "Sonstige", notes: "Kopfsteinpflaster, Schmugglergasse Mermaid Street", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 5, stageNum: 1, stage: "1", name: "Dungeness Kieswüste & Prospect Cottage", category: "Geheimtipp", pass: "Sonstige", notes: "Englands einzige Halbwüste mit Leuchttürmen & Fischerhütten", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 6, stageNum: 1, stage: "1", name: "Camber Sands Dünen", category: "Geheimtipp", pass: "Sonstige", notes: "Weite Sanddünen zum Austoben nach der Fahrt", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 1, station: 1, name: "Dover Castle & Secret Wartime Tunnels", area: "Dover", tag: "Highlight", desc: "Mächtige Burg & unterirdische Weltkriegstunnel." },
+            { id: 2, station: 1, name: "White Cliffs of Dover (South Foreland Lighthouse)", area: "Dover", tag: "Natur", desc: "Spaziergang entlang der berühmten Kreidefelsen." },
+            { id: 3, station: 1, name: "Rye Historic Town & Mermaid Street", area: "Rye", tag: "Kultur", desc: "Kopfsteinpflaster, Fachwerkhäuser & Schmugglergeschichte." },
+            { id: 4, station: 1, name: "Camber Sands Beach", area: "Rye", tag: "Familie", desc: "Riesiger Sandstrand mit Dünenlandschaft." },
+            { id: 5, station: 1, name: "Bodiam Castle", area: "Rye", tag: "Highlight", desc: "Märchenhafte Wasserburg mit Wassergraben." },
+            { id: 6, station: 1, name: "Dungeness Nature Reserve & Miniature Railway", area: "Rye", tag: "Geheimtipp", desc: "Kurioses Kieselstein-Kap & Minidampfbahn." },
+            { id: 7, station: 1, name: "Royal Pavilion Brighton", area: "Brighton", tag: "Kultur", desc: "Exotischer Palast im indisch-chinesischen Stil." },
+            { id: 8, station: 1, name: "Brighton Palace Pier & Seafront", area: "Brighton", tag: "Familie", desc: "Klassischer britischer Pier mit Fahrgeschäften." },
+            { id: 9, station: 1, name: "British Airways i360 Lookout", area: "Brighton", tag: "Highlight", desc: "Gläserner Aussichtsturm mit Rundumblick." },
+            { id: 10, station: 1, name: "Seven Sisters Country Park & Birling Gap", area: "Brighton", tag: "Natur", desc: "Spektakuläre Kreidefelsenküste." },
+            { id: 11, station: 1, name: "Devil's Dyke (South Downs)", area: "Brighton", tag: "Geheimtipp", desc: "Tiefes Trockental mit toller Aussicht & Drachenfliegern." },
 
             // Etappe 2
-            { id: 7, stageNum: 2, stage: "2", name: "Seven Sisters & Birling Gap", category: "Monument", pass: "National Trust", notes: "Kreidefelsen, Gezeitentümpel & Kieselstrand", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 8, stageNum: 2, stage: "2", name: "Royal Pavilion Brighton", category: "Monument", pass: "Sonstige", notes: "Extravaganter Palast im indo-sarazenischen Stil", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 9, stageNum: 2, stage: "2", name: "Brighton Palace Pier & Arcades", category: "Familien-Fokus", pass: "Sonstige", notes: "Klassischer Rummel-Pier mit Fahrgeschäften & Spielhallen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 10, stageNum: 2, stage: "2", name: "The Lanes Brighton", category: "Geheimtipp", pass: "Sonstige", notes: "Historische engste Gassen mit Fudge-Manufakturen & Shops", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 11, stageNum: 2, stage: "2", name: "Beachy Head Klippe & Leuchtturm", category: "Geheimtipp", pass: "Sonstige", notes: "Höchstes Kreidekliff Großbritanniens (162m)", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 12, station: 2, name: "The Needles Landmark & Chairlift", area: "Isle of Wight", tag: "Highlight", desc: "Felsnadeln im Meer & Sesselbahn zum Buntstrand." },
+            { id: 13, station: 2, name: "Carisbrooke Castle & Esel-Brunnen", area: "Isle of Wight", tag: "Familie", desc: "Historische Burg mit berühmten Tret-Eseln." },
+            { id: 14, station: 2, name: "Osborne House", area: "Isle of Wight", tag: "Kultur", desc: "Sommerresidenz von Königin Victoria." },
+            { id: 15, station: 2, name: "Shanklin Chine & Old Village", area: "Isle of Wight", tag: "Natur", desc: "Malerische bewachsene Schlucht & Reetdachhäuser." },
+            { id: 16, station: 2, name: "Blackgang Chine Theme Park", area: "Isle of Wight", tag: "Familie", desc: "Ältester Freizeitpark Englands mit Dinosauriern." },
+            { id: 17, station: 2, name: "Robin Hill Country Park", area: "Isle of Wight", tag: "Familie", desc: "Abenteuerpark in der Natur mit Baumwipfelpfaden." },
+            { id: 18, station: 2, name: "Bournemouth Beach & Pier", area: "Bournemouth", tag: "Familie", desc: "Kilometerlanger goldener Sandstrand." },
+            { id: 19, station: 2, name: "Russell-Cotes Art Gallery & Museum", area: "Bournemouth", tag: "Kultur", desc: "Skurrile Jugendstil-Villa voller Weltreise-Schätze." },
+            { id: 20, station: 2, name: "Hengistbury Head", area: "Bournemouth", tag: "Natur", desc: "Naturschutzgebiet mit Blick auf die Isle of Wight." },
 
             // Etappe 3
-            { id: 12, stageNum: 3, stage: "3", name: "The Needles & Needles Old Battery", category: "Monument", pass: "National Trust", notes: "Drei Kreidefelsen im Meer & Festung aus dem Kalten Krieg", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 13, stageNum: 3, stage: "3", name: "Osborne House & Swiss Cottage", category: "Monument", pass: "English Heritage", notes: "Sommerresidenz von Queen Victoria mit eigenem Kinder-Schweizerhaus", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 14, stageNum: 3, stage: "3", name: "Carisbrooke Castle", category: "Monument", pass: "English Heritage", notes: "Normannische Burg mit Esel-Wasserhebewerk", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 15, stageNum: 3, stage: "3", name: "Alum Bay Chairlift (Sessellift)", category: "Familien-Fokus", pass: "Sonstige", notes: "Sessellift über die bunten Sandklippen hinab zum Strand", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 16, stageNum: 3, stage: "3", name: "Blackgang Chine Freizeitpark", category: "Familien-Fokus", pass: "Sonstige", notes: "Ältester Freizeitpark Englands an Klippenkante mit Dinos", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 17, stageNum: 3, stage: "3", name: "Compton Bay Fossiliensuche & Dinosaur Isle", category: "Familien-Fokus", pass: "Sonstige", notes: "Echte Dinosaurierspuren im Sandstein bei Niedrigwasser", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 18, stageNum: 3, stage: "3", name: "Steephill Cove", category: "Geheimtipp", pass: "Sonstige", notes: "Idyllische versteckte Bucht mit Krabben-Sandwiches", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 19, stageNum: 3, stage: "3", name: "The Garlic Farm Newchurch", category: "Geheimtipp", pass: "Sonstige", notes: "Bauernhof mit Traktorrundfahrten & Knoblaucheis", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 21, station: 3, name: "Old Harry Rocks", area: "Jurassic Coast", tag: "Highlight", desc: "Markante Kreidesäulen im Meer nahe Swanage." },
+            { id: 22, station: 3, name: "Corfe Castle", area: "Jurassic Coast", tag: "Highlight", desc: "Dramatische Burgruine auf einem Hügel." },
+            { id: 23, station: 3, name: "Lulworth Cove & Durdle Door", area: "Jurassic Coast", tag: "Highlight", desc: "Das berühmte natürliche Felsentor & Traumbucht." },
+            { id: 24, station: 3, name: "Kimmeridge Bay & Fossiliensuche", area: "Jurassic Coast", tag: "Geheimtipp", desc: "Paradies für Fossiliensucher & Schnorchler." },
+            { id: 25, station: 3, name: "Dorset Museum & Dinosaur Safari", area: "Dorset", tag: "Familie", desc: "Spannendes Museum zur Urzeitgeschichte." },
+            { id: 26, station: 3, name: "Cerne Abbas Giant", area: "Dorset", tag: "Geheimtipp", desc: "Mysteröse gigantische Scharrbild-Figur im Rasen." },
+            { id: 27, station: 3, name: "Abbotsbury Subtropical Gardens & Swannery", area: "Dorset", tag: "Familie", desc: "Tropenpark & die einzige Schwanenkolonie der Welt." },
 
             // Etappe 4
-            { id: 20, stageNum: 4, stage: "4", name: "Beaulieu National Motor Museum", category: "Familien-Fokus", pass: "Sonstige", notes: "280 Fahrzeuge, Monorail & Harry Potter Auto", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 21, stageNum: 4, stage: "4", name: "New Forest Ponys & Nationalpark", category: "Familien-Fokus", pass: "Sonstige", notes: "Freilaufende Ponys & Esel auf Wald- & Heideflächen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 22, stageNum: 4, stage: "4", name: "Bournemouth Pier & RockReef", category: "Familien-Fokus", pass: "Sonstige", notes: "Indoor-Kletterzentrum auf dem Pier & Sandstrand", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 23, stageNum: 4, stage: "4", name: "Hengistbury Head & Mudeford Sandbank", category: "Geheimtipp", pass: "Sonstige", notes: "Wegebahn zu abgelegener Landzunge mit Strandhütten", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 28, station: 4, name: "Exeter Cathedral & Underground Passages", area: "Exeter", tag: "Kultur", desc: "Gotische Kathedrale & geheimnisvolle Tunnel." },
+            { id: 29, station: 4, name: "Torquay Harbour & Babbacombe Model Village", area: "Torquay", tag: "Familie", desc: "Miniaturdorf mit riesigen Gartenanlagen." },
+            { id: 30, station: 4, name: "Kents Cavern Prehistoric Caves", area: "Torquay", tag: "Familie", desc: "Älteste Steinzeithöhle Großbritanniens." },
+            { id: 31, station: 4, name: "Cockington Village", area: "Torquay", tag: "Geheimtipp", desc: "Idyllisches Dorf wie aus dem Märchenbuch." },
+            { id: 32, station: 4, name: "Haytor Rocks & Dartmoor Ponies", area: "Dartmoor", tag: "Highlight", desc: "Granitfelsen besteigen & wildlebende Ponys treffen." },
+            { id: 33, station: 4, name: "Postbridge Clapper Bridge", area: "Dartmoor", tag: "Natur", desc: "Uralte Steinplattenbrücke im Nationalpark." },
+            { id: 34, station: 4, name: "Castle Drogo", area: "Dartmoor", tag: "Kultur", desc: "Das letzte in England erbaute Schloss." },
+            { id: 35, station: 4, name: "Lydford Gorge & White Lady Waterfall", area: "Dartmoor", tag: "Natur", desc: "Tiefe Waldschlucht mit 30m Wasserfall." },
 
             // Etappe 5
-            { id: 24, stageNum: 5, stage: "5", name: "Corfe Castle Burgruine", category: "Monument", pass: "National Trust", notes: "Dramatische Burgruine aus dem 11. Jahrhundert", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 25, stageNum: 5, stage: "5", name: "Swanage Railway Dampfzug", category: "Familien-Fokus", pass: "Sonstige", notes: "Dampfeisenbahn von Purbeck Park bis ans Meer", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 26, stageNum: 5, stage: "5", name: "Durdle Door & Lulworth Cove", category: "Monument", pass: "Sonstige", notes: "Weltberühmtes Kalksteintor im Meer & Bucht", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 27, stageNum: 5, stage: "5", name: "Fossilien klopfen in Charmouth", category: "Familien-Fokus", pass: "Sonstige", notes: "Ammoniten & Belemniten am Gezeitenstrand suchen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 28, stageNum: 5, stage: "5", name: "Exeter Underground Passages", category: "Familien-Fokus", pass: "Sonstige", notes: "Unterirdische mittelalterliche Stollen (Vorab-Buchung!)", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 29, stageNum: 5, stage: "5", name: "Tyneham Ghost Village", category: "Geheimtipp", pass: "Sonstige", notes: "1943 evakuiertes, verlassenes Dorf in Purbeck Hills", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 30, stageNum: 5, stage: "5", name: "Chococo Swanage Schokoladenmanufaktur", category: "Geheimtipp", pass: "Sonstige", notes: "Handwerkliche Schokoladenspezialitäten", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 36, station: 5, name: "Salcombe Harbour & Bootstour", area: "Salcombe", tag: "Natur", desc: "Malerischer Küstenort mit klarem Wasser." },
+            { id: 37, station: 5, name: "Overbeck's Garden (National Trust)", area: "Salcombe", tag: "Geheimtipp", desc: "Exotischer Klippengarten mit Palmen." },
+            { id: 38, station: 5, name: "Hope Cove & Coast Path Wanderung", area: "Salcombe", tag: "Natur", desc: "Traumhafte Küstenwanderung." },
+            { id: 39, station: 5, name: "The Lost Gardens of Heligan", area: "Heligan", tag: "Highlight", desc: "Verzauberte Dschungel-Gärten mit Moosskulpturen." },
 
-            // Etappe 6-7
-            { id: 31, stageNum: 6, stage: "6-7", name: "Haytor Rocks Granitfelsen", category: "Familien-Fokus", pass: "Sonstige", notes: "Gefahrloses Kraxeln auf Granit-Tors mit Panorama", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 32, stageNum: 6, stage: "6-7", name: "Hound Tor & Mittelalterliches Dorf", category: "Monument", pass: "English Heritage", notes: "Inspiration für 'Hund von Baskerville' & Dorfruinen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 33, stageNum: 6, stage: "6-7", name: "Postbridge Clapper Bridge", category: "Monument", pass: "Sonstige", notes: "Mittelalterliche Steinplattenbrücke über den River Dart", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 34, stageNum: 6, stage: "6-7", name: "Lydford Gorge & Whitelady Wasserfall", category: "Familien-Fokus", pass: "National Trust", notes: "Bewaldete tiefe Schlucht & Devil's Cauldron Strudeltopf", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 35, stageNum: 6, stage: "6-7", name: "Dartmoor Letterboxing Schnitzeljagd", category: "Familien-Fokus", pass: "Sonstige", notes: "Stempelkästen per Kompass im Moor suchen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 36, stageNum: 6, stage: "6-7", name: "Wistman's Wood Märchenwald", category: "Geheimtipp", pass: "Sonstige", notes: "Uralter verkrüppelter Eichenwald auf Moos-Granitblöcken", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            // Etappe 6
+            { id: 40, station: 6, name: "St Michael's Mount", area: "Penzance/Falmouth", tag: "Highlight", desc: "Inselburg, die bei Ebbe zu Fuß erreichbar ist." },
+            { id: 41, station: 6, name: "Pendennis Castle", area: "Falmouth", tag: "Familie", desc: "Tudor-Festung Heinrichs VIII. direkt am Meer." },
+            { id: 42, station: 6, name: "National Maritime Museum Cornwall", area: "Falmouth", tag: "Familie", desc: "Erlebnismuseum rund um Schiffe & Ozeane." },
+            { id: 43, station: 6, name: "Trebah Garden", area: "Falmouth", tag: "Natur", desc: "Subtropischer Schluchtgarten mit privatem Strand." },
+            { id: 44, station: 6, name: "Minack Theatre", area: "Cornwall", tag: "Highlight", desc: "Spektakuläres Freilichttheater direkt in die Klippen gebaut." },
+            { id: 45, station: 6, name: "Land's End Landmark", area: "Cornwall", tag: "Highlight", desc: "Westlichster Punkt Englands mit Erlebnispark." },
+            { id: 46, station: 6, name: "Porthcurno Beach", area: "Cornwall", tag: "Natur", desc: "Karibikähnlicher Strand mit türkisblauem Wasser." },
+            { id: 47, station: 6, name: "St. Ives Town, Tate & Beaches", area: "St. Ives", tag: "Highlight", desc: "Künstlerstadt mit wunderschönen Sandstränden." },
+
+            // Etappe 7
+            { id: 48, station: 7, name: "Tintagel Castle & Merlin's Cave", area: "Tintagel", tag: "Highlight", desc: "Mythenumwobene König-Artus-Burg auf Felsen." },
+            { id: 49, station: 7, name: "Boscastle Harbour", area: "Tintagel", tag: "Geheimtipp", desc: "Einzigartiger natürlicher Fjord-Hafen." },
+            { id: 50, station: 7, name: "Clovelly Historic Village", area: "Clovelly", tag: "Highlight", desc: "Autofreies, steiles Fischerdorf mit Lasten-Eseln." },
+            { id: 51, station: 7, name: "Barnstaple Historic Pannier Market", area: "Barnstaple", tag: "Kultur", desc: "Überdeckter historischer Marktplatz." },
 
             // Etappe 8
-            { id: 37, stageNum: 8, stage: "8", name: "Lost Gardens of Heligan & Dschungelbrücke", category: "Familien-Fokus", pass: "Sonstige", notes: "Subtropischer Garten, 30m Hängebrücke & Erdskulpturen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 38, stageNum: 8, stage: "8", name: "Burgh Island & Sea Tractor", category: "Familien-Fokus", pass: "Sonstige", notes: "Gezeiteninsel mit gigantischem Traktorfahrzeug bei Flut", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 39, stageNum: 8, stage: "8", name: "Charlestown Historischer Großsegler-Hafen", category: "Geheimtipp", pass: "Sonstige", notes: "Originaler georgianischer Hafen mit alten Holzschiffen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
+            { id: 52, station: 8, name: "Valley of Rocks & Lynton Cliff Railway", area: "Exmoor", tag: "Highlight", desc: "Wilde Felslandschaft mit Ziegen & historische Standseilbahn." },
+            { id: 53, station: 8, name: "Dunster Castle & Steam Railway", area: "Exmoor", tag: "Kultur", desc: "Schloss mit Parkanlage & Museumsdampfzug." },
+            { id: 54, station: 8, name: "Tarr Steps Ancient Clapper Bridge", area: "Exmoor", tag: "Geheimtipp", desc: "Uralte Steinbrücke mitten im Fluss." },
+            { id: 55, station: 8, name: "Cheddar Gorge & Caves", area: "Somerset", tag: "Highlight", desc: "Englands tiefste Schlucht mit Tropfsteinhöhlen." },
+            { id: 56, station: 8, name: "Bath Roman Baths & Abbey", area: "Somerset", tag: "Highlight", desc: "Antike römische Bäder in UNESCO-Welterbestadt." },
+            { id: 57, station: 8, name: "Stratford-upon-Avon & Shakespeare's House", area: "Stratford", tag: "Kultur", desc: "Geburtsort von Shakespeare mit Fachwerkflair." },
+            { id: 58, station: 8, name: "Warwick Castle", area: "Stratford", tag: "Highlight", desc: "Erlebnisburg mit Ritterturnieren & Shows." },
 
             // Etappe 9
-            { id: 40, stageNum: 9, stage: "9", name: "St Michael's Mount Inselfestung", category: "Monument", pass: "National Trust", notes: "Inselburg bei Ebbe zu Fuß über Steinweg erreichbar", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 41, stageNum: 9, stage: "9", name: "Minack Theatre Klippentheater", category: "Monument", pass: "Sonstige", notes: "In Klippen gehauenens Freilufttheater über dem Atlantik", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 42, stageNum: 9, stage: "9", name: "St. Ives & Porthmeor Surfstrand", category: "Familien-Fokus", pass: "Sonstige", notes: "Künstlerstadt, Sandstrände & Wellenreiten", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 43, stageNum: 9, stage: "9", name: "Geevor Tin Mine & Botallack", category: "Familien-Fokus", pass: "Sonstige", notes: "Begehbare Zinn-Stollen & Klippen-Maschinenhäuser", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 44, stageNum: 9, stage: "9", name: "Nanjizal Cove & Song of the Sea Felsentor", category: "Geheimtipp", pass: "Sonstige", notes: "Einsame Bucht mit Felsfenster & Robbenbeobachtung", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-
-            // Etappe 10
-            { id: 45, stageNum: 10, stage: "10", name: "Tintagel Castle & Merlins Höhle", category: "Monument", pass: "English Heritage", notes: "Artus-Burg mit Brücke, Gallos-Statue & Höhle", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 46, stageNum: 10, stage: "10", name: "Clovelly Fischerdorf mit Holzschlitten", category: "Familien-Fokus", pass: "Sonstige", notes: "Autofreies Klippendorf mit Eseln & Lastenschlitten", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 47, stageNum: 10, stage: "10", name: "Boscastle Naturhafen & Hartland Quay", category: "Geheimtipp", pass: "Sonstige", notes: "Fjordartiger Gezeitenhafen & dramatische Felsfaltung", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-
-            // Etappe 11
-            { id: 48, stageNum: 11, stage: "11", name: "Valley of Rocks & Wildziegen", category: "Monument", pass: "Sonstige", notes: "Trockental mit Klippenfelsen & kletternden Ziegen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 49, stageNum: 11, stage: "11", name: "Standseilbahn Lynton & Lynmouth", category: "Familien-Fokus", pass: "Sonstige", notes: "Steilste wasserballastbetriebene Bergbahn der Welt", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 50, stageNum: 11, stage: "11", name: "Dunster Castle & Wassermühle", category: "Monument", pass: "National Trust", notes: "Schloss mit Parkanlage & funktionsfähiger Mühle", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 51, stageNum: 11, stage: "11", name: "Tarr Steps Megalithbrücke & Watersmeet", category: "Familien-Fokus", pass: "National Trust", notes: "Prähistorische Steinbrücke & Wald-Teehaus in Schlucht", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-
-            // Etappe 12
-            { id: 52, stageNum: 12, stage: "12", name: "Cheddar Gorge & Gough's Cave", category: "Familien-Fokus", pass: "Sonstige", notes: "137m kalksteinschlucht, Tropfsteinhöhlen & Cheddar Man", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 53, stageNum: 12, stage: "12", name: "Wells Cathedral & Vicar's Close", category: "Monument", pass: "Sonstige", notes: "Gotische Kathedrale mit Ritteruhr & älteste Mittelalterstraße", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 54, stageNum: 12, stage: "12", name: "Glastonbury Tor Aufstieg", category: "Familien-Fokus", pass: "National Trust", notes: "Mythologischer Hügel mit Kirchturm & 360-Grad-Blick", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 55, stageNum: 12, stage: "12", name: "Ebbor Gorge Kletterpfad", category: "Geheimtipp", pass: "Sonstige", notes: "Ruhige Schlucht mit Kletterpfaden durch alte Eichen", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-
-            // Etappe 13
-            { id: 56, stageNum: 13, stage: "13", name: "Shakespeare Birthplace & Avon Bootstour", category: "Monument", pass: "Sonstige", notes: "Shakespeares Geburtshaus & Bootfahren auf dem Avon", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 57, stageNum: 13, stage: "13", name: "Warwick Castle Ritterburg", category: "Familien-Fokus", pass: "Sonstige", notes: "Interaktive Ritterburg mit Katapult & Greifvögeln", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-            { id: 58, stageNum: 13, stage: "13", name: "Broadway Tower (Cotswolds)", category: "Geheimtipp", pass: "Sonstige", notes: "Folly-Turm mit Blick über bis zu 16 Grafschaften", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" },
-
-            // Etappe 14
-            { id: 59, stageNum: 14, stage: "14", name: "Gloucester Cathedral (Harry Potter)", category: "Familien-Fokus", pass: "Sonstige", notes: "Original Drehorte für Hogwarts-Gänge & Troll-Lavaroom", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" }
+            { id: 59, station: 9, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge)." }
         ];
 
-        // Custom Firebase Config from LocalStorage or code override
-        const storedConfigStr = localStorage.getItem("suedengland_custom_firebase_config");
-        let customConfig = null;
-        if (storedConfigStr) {
-            try { customConfig = JSON.parse(storedConfigStr); } catch(e){}
-        }
+        // Global State
+        let poiRatings = {};
+        let db = null;
+        let unsubscribe = null;
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'suedengland-roadtrip';
-        const firebaseConfig = customConfig || (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "demo-key",
-            authDomain: "demo-app.firebaseapp.com",
-            projectId: "demo-app",
-            storageBucket: "demo-app.appspot.com",
-            messagingSenderId: "100000000000",
-            appId: "1:100000000000:web:demo"
-        });
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let currentUser = null;
-        let isFirestoreReady = false;
-        let poisData = JSON.parse(localStorage.getItem("suedengland_poi_scores_v1")) || ALL_POIS;
-
-        // Initialize App & Cloud Sync
         window.addEventListener('DOMContentLoaded', () => {
+            loadLocalData();
+            initFirebaseIfAvailable();
             renderTable();
-            updateStats();
-            initCloudSync();
         });
 
-        // Save Local Fallback
-        function saveDataLocally() {
-            localStorage.setItem("suedengland_poi_scores_v1", JSON.stringify(poisData));
+        function loadLocalData() {
+            const stored = localStorage.getItem("suedengland_poi_ratings");
+            if (stored) {
+                try { poiRatings = JSON.parse(stored); } catch (e) { poiRatings = {}; }
+            }
+        }
+
+        function saveLocalData() {
+            localStorage.setItem("suedengland_poi_ratings", JSON.stringify(poiRatings));
             updateStats();
         }
 
-        async function initCloudSync() {
-            if (firebaseConfig.apiKey === "demo-key") {
-                updateSyncStatus("offline", "Lokal gesichert (Sync einrichten)");
+        function initFirebaseIfAvailable() {
+            const configStr = localStorage.getItem("suedengland_custom_firebase_config");
+            if (!configStr) {
+                updateSyncBadge("⚪ Lokal-Modus", "bg-slate-400");
                 return;
             }
 
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    const userCred = await signInWithCustomToken(auth, __initial_auth_token);
-                    currentUser = userCred.user;
-                } else {
-                    const userCred = await signInAnonymously(auth);
-                    currentUser = userCred.user;
-                }
+                const firebaseConfig = JSON.parse(configStr);
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                db = getFirestore(app);
 
-                const poisColRef = collection(db, 'artifacts', appId, 'public', 'data', 'pois');
-
-                onSnapshot(poisColRef, (snapshot) => {
-                    if (snapshot.empty) {
-                        seedInitialCloudData();
-                    } else {
-                        snapshot.forEach((docSnap) => {
-                            const data = docSnap.data();
-                            const poiId = parseInt(docSnap.id, 10);
-                            const item = poisData.find(p => p.id === poiId);
-                            if (item && data) {
-                                if (typeof data.r1 === 'number') item.r1 = data.r1;
-                                if (typeof data.r2 === 'number') item.r2 = data.r2;
-                                if (typeof data.r3 === 'number') item.r3 = data.r3;
-                                if (typeof data.r4 === 'number') item.r4 = data.r4;
-                                if (typeof data.comment === 'string') item.comment = data.comment;
-                            }
-                        });
-                        isFirestoreReady = true;
-                        updateSyncStatus("online", "Echtzeit-Sync aktiv");
-                        renderTable();
-                        updateStats();
-                    }
-                }, (err) => {
-                    console.warn("Firestore sync fallback to local mode:", err);
-                    updateSyncStatus("offline", "Lokal gesichert");
+                signInAnonymously(auth).then(() => {
+                    updateSyncBadge("🟢 Echtzeit-Sync aktiv", "bg-emerald-500");
+                    subscribeToCloud();
+                }).catch(err => {
+                    console.error("Auth error:", err);
+                    updateSyncBadge("🔴 Sync-Fehler", "bg-rose-500");
                 });
-            } catch (err) {
-                console.warn("Cloud Auth failed, running in local mode:", err);
-                updateSyncStatus("offline", "Lokal gesichert");
-            }
-        }
 
-        async function seedInitialCloudData() {
-            if (!currentUser) return;
-            try {
-                const batch = writeBatch(db);
-                poisData.forEach(p => {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'pois', String(p.id));
-                    batch.set(docRef, {
-                        r1: p.r1 || 0,
-                        r2: p.r2 || 0,
-                        r3: p.r3 || 0,
-                        r4: p.r4 || 0,
-                        comment: p.comment || ""
-                    });
-                });
-                await batch.commit();
-                isFirestoreReady = true;
-                updateSyncStatus("online", "Echtzeit-Sync aktiv");
             } catch (e) {
-                console.warn("Failed to seed cloud database:", e);
-                updateSyncStatus("offline", "Lokal gesichert");
+                console.error("Config error:", e);
+                updateSyncBadge("🔴 Config Ungültig", "bg-rose-500");
             }
         }
 
-        function updateSyncStatus(type, text) {
-            const el = document.getElementById("sync-status");
-            if (!el) return;
-            if (type === "online") {
-                el.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950 text-emerald-300 border border-emerald-700/60";
-                el.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> ${text}`;
-            } else if (type === "offline") {
-                el.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-950 text-amber-300 border border-amber-700/60";
-                el.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> ${text}`;
-            } else {
-                el.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-950 text-amber-300 border border-indigo-700/60";
-                el.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> ${text}`;
-            }
-        }
-
-        function getAverage(poi) {
-            const scores = [poi.r1, poi.r2, poi.r3, poi.r4].filter(val => val > 0);
-            if (scores.length === 0) return 0;
-            const sum = scores.reduce((a, b) => a + b, 0);
-            return (sum / scores.length).toFixed(1);
-        }
-
-        function getKidsAverage(poi) {
-            const scores = [poi.r3, poi.r4].filter(val => val > 0);
-            if (scores.length === 0) return 0;
-            return ((poi.r3 + poi.r4) / scores.length).toFixed(1);
-        }
-
-        window.updateRating = async function(id, field, value) {
-            const valNum = parseInt(value) || 0;
-            const clamped = Math.min(10, Math.max(0, valNum));
-            const item = poisData.find(p => p.id === id);
-            if (item) {
-                item[field] = clamped;
-                saveDataLocally();
-
-                const avgCell = document.getElementById(`avg-${id}`);
-                const statusCell = document.getElementById(`status-${id}`);
-                if (avgCell && statusCell) {
-                    const avg = getAverage(item);
-                    avgCell.innerHTML = formatAvgBadge(avg);
-                    statusCell.innerHTML = formatStatusBadge(item, avg);
+        function subscribeToCloud() {
+            if (!db) return;
+            const docRef = doc(db, "suedengland", "family_ratings");
+            
+            unsubscribe = onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    poiRatings = snapshot.data();
+                    saveLocalData();
+                    renderTable();
                 }
-                updateStats();
-
-                if (currentUser && isFirestoreReady) {
-                    try {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'pois', String(id));
-                        await setDoc(docRef, { [field]: clamped }, { merge: true });
-                    } catch (err) {
-                        console.error("Cloud score sync error:", err);
-                    }
-                }
-            }
-        };
-
-        window.updateComment = async function(id, text) {
-            const item = poisData.find(p => p.id === id);
-            if (item) {
-                item.comment = text;
-                saveDataLocally();
-                if (currentUser && isFirestoreReady) {
-                    try {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'pois', String(id));
-                        await setDoc(docRef, { comment: text }, { merge: true });
-                    } catch (err) {
-                        console.error("Cloud comment sync error:", err);
-                    }
-                }
-            }
-        };
-
-        function formatAvgBadge(avg) {
-            if (avg == 0) return `<span class="text-slate-300 font-normal">-</span>`;
-            let color = "bg-slate-100 text-slate-700";
-            if (avg >= 8.5) color = "bg-emerald-600 text-white font-bold";
-            else if (avg >= 7.0) color = "bg-emerald-100 text-emerald-800 font-bold";
-            else if (avg >= 5.0) color = "bg-amber-100 text-amber-800 font-medium";
-            else color = "bg-red-100 text-red-700 font-medium";
-
-            return `<span class="px-2 py-1 rounded-md text-xs ${color}">${avg}</span>`;
+            }, (error) => {
+                console.error("Firestore error:", error);
+                updateSyncBadge("🔴 Sync-Fehler", "bg-rose-500");
+            });
         }
 
-        function formatStatusBadge(item, avg) {
-            if (avg == 0) return `<span class="text-xs text-slate-400 font-normal">Offen</span>`;
-
-            const scores = [item.r1, item.r2, item.r3, item.r4].filter(v => v > 0);
-            const min = Math.min(...scores);
-            const max = Math.max(...scores);
-
-            if (max - min >= 5) {
-                return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-800" title="Große Abweichung zwischen Familienmitgliedern">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Diskussion
-                        </span>`;
-            }
-
-            if (avg >= 8.0) {
-                return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
-                            <i class="fa-solid fa-check"></i> Top Must-See
-                        </span>`;
-            } else if (avg >= 6.0) {
-                return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700">
-                            Guter Kompromiss
-                        </span>`;
-            } else {
-                return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500">
-                            Niedrig
-                        </span>`;
-            }
+        function updateSyncBadge(text, colorClass) {
+            document.getElementById("sync-text").innerText = text;
+            const dot = document.getElementById("sync-dot");
+            dot.className = `w-2.5 h-2.5 rounded-full inline-block ${colorClass}`;
         }
 
-        function renderTable() {
+        window.renderTable = function() {
             const tbody = document.getElementById("poi-table-body");
-            if (!tbody) return;
-            const search = document.getElementById("search-input").value.toLowerCase();
-            const stageFilter = document.getElementById("filter-stage").value;
-            const categoryFilter = document.getElementById("filter-category").value;
-            const passFilter = document.getElementById("filter-pass").value;
-            const sortVal = document.getElementById("filter-sort").value;
+            const searchVal = document.getElementById("search-input").value.toLowerCase();
+            const stationVal = document.getElementById("station-filter").value;
+            const tagVal = document.getElementById("tag-filter").value;
 
-            let filtered = poisData.filter(poi => {
-                const matchSearch = poi.name.toLowerCase().includes(search) || 
-                                    poi.notes.toLowerCase().includes(search) || 
-                                    (poi.comment && poi.comment.toLowerCase().includes(search));
+            tbody.innerHTML = "";
 
-                const matchStage = stageFilter === "ALL" || poi.stage === stageFilter;
-                const matchCategory = categoryFilter === "ALL" || poi.category === categoryFilter;
-                const matchPass = passFilter === "ALL" || poi.pass === passFilter;
+            let ratedCount = 0;
+            let favCount = 0;
+            let totalSum = 0;
+            let totalValidPois = 0;
 
-                return matchSearch && matchStage && matchCategory && matchPass;
-            });
+            pois.forEach((poi) => {
+                // Filters
+                if (stationVal !== "ALL" && poi.station.toString() !== stationVal) return;
+                if (tagVal !== "ALL" && poi.tag !== tagVal) return;
+                if (searchVal && !poi.name.toLowerCase().includes(searchVal) && !poi.area.toLowerCase().includes(searchVal) && !poi.desc.toLowerCase().includes(searchVal)) return;
 
-            filtered.sort((a, b) => {
-                if (sortVal === "avg-desc") {
-                    return getAverage(b) - getAverage(a);
-                } else if (sortVal === "kids-desc") {
-                    return getKidsAverage(b) - getKidsAverage(a);
-                } else if (sortVal === "disagree") {
-                    const diffA = Math.max(a.r1, a.r2, a.r3, a.r4) - Math.min(a.r1||10, a.r2||10, a.r3||10, a.r4||10);
-                    const diffB = Math.max(b.r1, b.r2, b.r3, b.r4) - Math.min(b.r1||10, b.r2||10, b.r3||10, b.r4||10);
-                    return diffB - diffA;
-                } else {
-                    return a.id - b.id;
+                const data = poiRatings[poi.id] || { r1: "", r2: "", r3: "", r4: "", note: "" };
+                
+                // Calculate average
+                const nums = [parseFloat(data.r1), parseFloat(data.r2), parseFloat(data.r3), parseFloat(data.r4)].filter(n => !isNaN(n) && n > 0);
+                const avg = nums.length > 0 ? (nums.reduce((a,b) => a+b, 0) / nums.length).toFixed(1) : "-";
+
+                if (nums.length > 0) {
+                    ratedCount++;
+                    totalSum += parseFloat(avg);
+                    totalValidPois++;
+                    if (parseFloat(avg) >= 8.0) favCount++;
                 }
-            });
 
-            const noResults = document.getElementById("no-results");
-            if (filtered.length === 0) {
-                tbody.innerHTML = "";
-                if (noResults) noResults.classList.remove("hidden");
-                return;
-            } else {
-                if (noResults) noResults.classList.add("hidden");
-            }
+                // Tag colors
+                let tagColor = "bg-slate-100 text-slate-700";
+                if (poi.tag === "Highlight") tagColor = "bg-amber-100 text-amber-800 border border-amber-300";
+                if (poi.tag === "Familie") tagColor = "bg-indigo-100 text-indigo-800";
+                if (poi.tag === "Geheimtipp") tagColor = "bg-purple-100 text-purple-800";
+                if (poi.tag === "Natur") tagColor = "bg-emerald-100 text-emerald-800";
 
-            let html = "";
-            filtered.forEach(poi => {
-                const avg = getAverage(poi);
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name + ' ' + poi.area + ' England')}`;
 
-                let catClass = "bg-slate-100 text-slate-700";
-                if (poi.category === "Monument") catClass = "bg-purple-100 text-purple-800 border-purple-200";
-                if (poi.category === "Familien-Fokus") catClass = "bg-amber-100 text-amber-900 border-amber-200";
-                if (poi.category === "Geheimtipp") catClass = "bg-teal-100 text-teal-800 border-teal-200";
-
-                let passIcon = "";
-                if (poi.pass === "English Heritage") passIcon = `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-red-50 text-red-700 font-medium border border-red-200 ml-1" title="English Heritage Pass">EH</span>`;
-                if (poi.pass === "National Trust") passIcon = `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-200 ml-1" title="National Trust Pass">NT</span>`;
-
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name + ' UK')}`;
-
-                html += `
-                    <tr class="hover:bg-slate-50/80 transition group">
-                        <td class="py-3 px-3 text-center font-bold text-slate-400 group-hover:text-indigo-600">
-                            E${poi.stage}
-                        </td>
-                        <td class="py-3 px-4">
-                            <div class="font-semibold text-slate-900 flex items-center flex-wrap gap-1.5">
-                                <span>${poi.name}</span>
-                                ${passIcon}
-                                <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" 
-                                   class="inline-flex items-center gap-1 text-[11px] font-medium text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded border border-rose-200/80 transition"
-                                   title="Auf Google Maps anzeigen">
-                                    <i class="fa-solid fa-map-location-dot text-rose-500"></i> Maps
-                                </a>
-                            </div>
-                            <div class="text-xs text-slate-500 mt-0.5">${poi.notes}</div>
-                        </td>
-                        <td class="py-3 px-3 whitespace-nowrap">
-                            <span class="px-2 py-1 rounded-md text-[11px] font-medium border ${catClass}">
-                                ${poi.category}
-                            </span>
-                        </td>
-                        <td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100">
-                            <input type="number" min="0" max="10" value="${poi.r1 || ''}" placeholder="-" 
-                                oninput="updateRating(${poi.id}, 'r1', this.value)"
-                                class="w-12 text-center py-1 font-semibold rounded border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:bg-indigo-50 focus:outline-none text-slate-800">
-                        </td>
-                        <td class="py-2 px-1 text-center bg-indigo-50/20">
-                            <input type="number" min="0" max="10" value="${poi.r2 || ''}" placeholder="-" 
-                                oninput="updateRating(${poi.id}, 'r2', this.value)"
-                                class="w-12 text-center py-1 font-semibold rounded border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:bg-indigo-50 focus:outline-none text-slate-800">
-                        </td>
-                        <td class="py-2 px-1 text-center bg-amber-50/20 border-l border-amber-100">
-                            <input type="number" min="0" max="10" value="${poi.r3 || ''}" placeholder="-" 
-                                oninput="updateRating(${poi.id}, 'r3', this.value)"
-                                class="w-12 text-center py-1 font-semibold rounded border border-amber-500 focus:ring-2 focus:ring-amber-500 focus:bg-amber-50 focus:outline-none text-amber-900">
-                        </td>
-                        <td class="py-2 px-1 text-center bg-amber-50/20">
-                            <input type="number" min="0" max="10" value="${poi.r4 || ''}" placeholder="-" 
-                                oninput="updateRating(${poi.id}, 'r4', this.value)"
-                                class="w-12 text-center py-1 font-semibold rounded border border-amber-300 focus:ring-2 focus:ring-amber-500 focus:bg-amber-50 focus:outline-none text-amber-900">
-                        </td>
-                        <td id="avg-${poi.id}" class="py-3 px-3 text-center border-l border-emerald-100 bg-emerald-50/30">
-                            ${formatAvgBadge(avg)}
-                        </td>
-                        <td id="status-${poi.id}" class="py-3 px-3 text-center whitespace-nowrap">
-                            ${formatStatusBadge(poi, avg)}
-                        </td>
-                        <td class="py-2 px-4">
-                            <input type="text" value="${poi.comment || ''}" placeholder="Optionale Notiz..." 
-                                onchange="updateComment(${poi.id}, this.value)"
-                                class="w-full text-xs py-1 px-2 rounded border border-slate-200 focus:border-indigo-400 focus:outline-none bg-slate-50 focus:bg-white text-slate-700">
-                        </td>
-                    </tr>
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50/80 transition text-slate-700";
+                tr.innerHTML = `
+                    <td class="p-3 text-center text-xs font-mono text-slate-400">${poi.id}</td>
+                    <td class="p-3">
+                        <div class="font-semibold text-slate-900">${poi.name}</div>
+                        <div class="text-xs text-slate-500">${poi.area} • ${poi.desc}</div>
+                    </td>
+                    <td class="p-3">
+                        <span class="inline-block px-2 py-0.5 rounded-md text-xs font-medium ${tagColor}">${poi.tag}</span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="1" max="10" value="${data.r1 || ''}" onchange="updateRating(${poi.id}, 'r1', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="1" max="10" value="${data.r2 || ''}" onchange="updateRating(${poi.id}, 'r2', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="1" max="10" value="${data.r3 || ''}" onchange="updateRating(${poi.id}, 'r3', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="1" max="10" value="${data.r4 || ''}" onchange="updateRating(${poi.id}, 'r4', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                    </td>
+                    <td class="p-3 text-center bg-slate-100/60 font-bold ${avg >= 8 ? 'text-amber-600' : 'text-slate-800'}">
+                        ${avg}
+                    </td>
+                    <td class="p-3">
+                        <input type="text" value="${data.note || ''}" placeholder="Notiz..." onchange="updateRating(${poi.id}, 'note', this.value)" class="w-full p-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                    <td class="p-3 text-center">
+                        <a href="${mapsUrl}" target="_blank" class="inline-flex items-center justify-center px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded text-xs font-medium border border-rose-200 transition">
+                            📍 Maps
+                        </a>
+                    </td>
                 `;
+                tbody.appendChild(tr);
             });
 
-            tbody.innerHTML = html;
-        }
+            // Update stats
+            document.getElementById("stat-rated").innerText = `${ratedCount} / ${pois.length}`;
+            document.getElementById("stat-favorites").innerText = favCount;
+            document.getElementById("stat-avg").innerText = totalValidPois > 0 ? (totalSum / totalValidPois).toFixed(1) : "-";
+        };
 
-        window.applyFilters = function() {
+        window.filterPOIs = function() {
             renderTable();
         };
 
-        window.clearFilters = function() {
-            document.getElementById("search-input").value = "";
-            document.getElementById("filter-stage").value = "ALL";
-            document.getElementById("filter-category").value = "ALL";
-            document.getElementById("filter-pass").value = "ALL";
-            document.getElementById("filter-sort").value = "stage";
-            renderTable();
-        };
+        window.updateRating = async function(poiId, field, val) {
+            if (!poiRatings[poiId]) {
+                poiRatings[poiId] = { r1: "", r2: "", r3: "", r4: "", note: "" };
+            }
+            poiRatings[poiId][field] = val;
 
-        function updateStats() {
-            const ratedPois = poisData.filter(p => (p.r1 + p.r2 + p.r3 + p.r4) > 0);
-            const topFavorites = poisData.filter(p => parseFloat(getAverage(p)) >= 8.0);
-            const kidsFavorites = poisData.filter(p => parseFloat(getKidsAverage(p)) >= 8.5);
+            saveLocalData();
 
-            const elTotal = document.getElementById("stat-total-pois");
-            const elRated = document.getElementById("stat-rated-count");
-            const elTop = document.getElementById("stat-top-favorites");
-            const elKids = document.getElementById("stat-kids-favorites");
-
-            if (elTotal) elTotal.innerText = poisData.length;
-            if (elRated) elRated.innerText = `${ratedPois.length} / ${poisData.length}`;
-            if (elTop) elTop.innerText = topFavorites.length;
-            if (elKids) elKids.innerText = kidsFavorites.length;
-        }
-
-        window.loadDemoScores = async function() {
-            poisData.forEach(p => {
-                if (p.category === "Familien-Fokus") {
-                    p.r1 = Math.floor(Math.random() * 3) + 7;
-                    p.r2 = Math.floor(Math.random() * 3) + 7;
-                    p.r3 = Math.floor(Math.random() * 2) + 9;
-                    p.r4 = 10;
-                } else if (p.category === "Monument") {
-                    p.r1 = Math.floor(Math.random() * 3) + 8;
-                    p.r2 = Math.floor(Math.random() * 3) + 8;
-                    p.r3 = Math.floor(Math.random() * 4) + 5;
-                    p.r4 = Math.floor(Math.random() * 4) + 5;
-                } else {
-                    p.r1 = Math.floor(Math.random() * 4) + 6;
-                    p.r2 = Math.floor(Math.random() * 4) + 6;
-                    p.r3 = Math.floor(Math.random() * 4) + 6;
-                    p.r4 = Math.floor(Math.random() * 4) + 6;
+            // Sync to Cloud if active
+            if (db) {
+                try {
+                    const docRef = doc(db, "suedengland", "family_ratings");
+                    await setDoc(docRef, poiRatings, { merge: true });
+                    showToast("☁️ In Cloud gespeichert!");
+                } catch (e) {
+                    console.error("Cloud save failed:", e);
+                    showToast("⚠️ Lokal gespeichert (Cloud-Fehler)");
                 }
+            } else {
+                showToast("💾 Lokal gespeichert!");
+            }
+
+            renderTable();
+        };
+
+        window.exportToCSV = function() {
+            let csv = "\uFEFF"; // UTF-8 BOM
+            csv += "ID;Etappe;POI Name;Standort;Kategorie;Erwachsener 1;Erwachsener 2;Kind 1 (12J);Kind 2 (9J);Durchschnitt;Notizen;Google Maps Link\n";
+
+            pois.forEach(poi => {
+                const data = poiRatings[poi.id] || { r1: "", r2: "", r3: "", r4: "", note: "" };
+                const nums = [parseFloat(data.r1), parseFloat(data.r2), parseFloat(data.r3), parseFloat(data.r4)].filter(n => !isNaN(n) && n > 0);
+                const avg = nums.length > 0 ? (nums.reduce((a,b) => a+b, 0) / nums.length).toFixed(1) : "";
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name + ' ' + poi.area + ' England')}`;
+
+                csv += `"${poi.id}";"${poi.station}";"${poi.name.replace(/"/g, '""')}";"${poi.area}";"${poi.tag}";"${data.r1 || ''}";"${data.r2 || ''}";"${data.r3 || ''}";"${data.r4 || ''}";"${avg}";"${(data.note || '').replace(/"/g, '""')}";"${mapsUrl}"\n`;
             });
-            saveDataLocally();
-            renderTable();
-            updateStats();
 
-            if (currentUser && isFirestoreReady) {
-                try {
-                    const batch = writeBatch(db);
-                    poisData.forEach(p => {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'pois', String(p.id));
-                        batch.set(docRef, { r1: p.r1, r2: p.r2, r3: p.r3, r4: p.r4, comment: p.comment || "" }, { merge: true });
-                    });
-                    await batch.commit();
-                } catch (err) {
-                    console.error("Demo scores cloud sync error:", err);
-                }
-            }
-        };
-
-        window.resetScores = function() {
-            document.getElementById("reset-modal").classList.remove("hidden");
-        };
-
-        window.closeResetModal = function() {
-            document.getElementById("reset-modal").classList.add("hidden");
-        };
-
-        window.confirmResetScores = async function() {
-            closeResetModal();
-            poisData = ALL_POIS.map(p => ({ ...p, r1:0, r2:0, r3:0, r4:0, comment: "" }));
-            saveDataLocally();
-            renderTable();
-            updateStats();
-
-            if (currentUser && isFirestoreReady) {
-                try {
-                    const batch = writeBatch(db);
-                    poisData.forEach(p => {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'pois', String(p.id));
-                        batch.set(docRef, { r1: 0, r2: 0, r3: 0, r4: 0, comment: "" });
-                    });
-                    await batch.commit();
-                } catch (err) {
-                    console.error("Reset cloud sync error:", err);
-                }
-            }
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `suedengland_bewertungen_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("📥 CSV Datei heruntergeladen!");
         };
 
         window.openCloudConfigModal = function() {
-            const modal = document.getElementById("cloud-config-modal");
-            const textarea = document.getElementById("firebase-config-input");
-            if (modal) modal.classList.remove("hidden");
-            if (textarea && customConfig) {
-                textarea.value = JSON.stringify(customConfig, null, 2);
+            document.getElementById("cloud-modal").classList.remove("hidden");
+            const existing = localStorage.getItem("suedengland_custom_firebase_config");
+            if (existing) {
+                document.getElementById("firebase-config-input").value = existing;
             }
         };
 
         window.closeCloudConfigModal = function() {
-            const modal = document.getElementById("cloud-config-modal");
-            if (modal) modal.classList.add("hidden");
+            document.getElementById("cloud-modal").classList.add("hidden");
         };
 
         window.saveCloudConfig = function() {
-            const textarea = document.getElementById("firebase-config-input");
-            if (!textarea) return;
+            const val = document.getElementById("firebase-config-input").value.trim();
+            if (!val) return;
+
             try {
-                const parsed = JSON.parse(textarea.value.trim());
-                if (!parsed.apiKey || !parsed.projectId) {
-                    alert("Ungültige Config: 'apiKey' und 'projectId' werden mindestens benötigt.");
-                    return;
-                }
+                let parsed = JSON.parse(val);
                 localStorage.setItem("suedengland_custom_firebase_config", JSON.stringify(parsed));
                 closeCloudConfigModal();
-                window.location.reload();
+                showToast("⚙️ Firebase Konfiguration gespeichert! Seite laedt neu...");
+                setTimeout(() => window.location.reload(), 1000);
             } catch (e) {
-                alert("Bitte gib ein gültiges JSON-Format ein.");
+                alert("Bitte ein gueltiges JSON-Format eingeben!");
             }
         };
 
         window.clearCloudConfig = function() {
             localStorage.removeItem("suedengland_custom_firebase_config");
             closeCloudConfigModal();
-            window.location.reload();
+            showToast("⚪ Zurueck zum Lokal-Modus. Seite laedt neu...");
+            setTimeout(() => window.location.reload(), 1000);
         };
 
-        window.exportToCSV = function() {
-            let csvContent = "\uFEFF";
-            csvContent += "Etappe;POI Name;Kategorie;Pass / Modus;Beschreibung;Mama (Erw 1);Papa (Erw 2);Kind 12J;Kind 9J;Durchschnitt (1-10);Status;Notizen;Google Maps Link\n";
-
-            poisData.forEach(p => {
-                const avg = getAverage(p);
-                let status = "Offen";
-                if (avg >= 8.0) status = "Top Favorit";
-                else if (avg >= 6.0) status = "Guter Kompromiss";
-                else if (avg > 0) status = "Wenig Interesse";
-
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ' UK')}`;
-
-                const row = [
-                    `Etappe ${p.stage}`,
-                    `"${p.name.replace(/"/g, '""')}"`,
-                    `"${p.category}"`,
-                    `"${p.pass}"`,
-                    `"${p.notes.replace(/"/g, '""')}"`,
-                    p.r1 || 0,
-                    p.r2 || 0,
-                    p.r3 || 0,
-                    p.r4 || 0,
-                    avg.toString().replace('.', ','),
-                    `"${status}"`,
-                    `"${(p.comment || '').replace(/"/g, '""')}"`,
-                    `"${mapsUrl}"`
-                ];
-                csvContent += row.join(";") + "\n";
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Suedengland_Roadtrip_POI_Bewertungen.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.classList.remove("translate-y-20", "opacity-0");
+            setTimeout(() => {
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 2500);
+        }
     </script>
 </body>
 </html>
