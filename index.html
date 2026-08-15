@@ -39,6 +39,9 @@
                     <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow flex items-center gap-2 transition">
                         <i class="fa-solid fa-file-excel text-sm"></i> Export für Google Sheets (CSV)
                     </button>
+                    <button onclick="openCloudConfigModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition" title="Firebase Cloud-Sync einrichten">
+                        <i class="fa-solid fa-cloud"></i> Sync einrichten
+                    </button>
                     <button onclick="loadDemoScores()" class="bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-semibold border border-indigo-500 flex items-center gap-2 transition">
                         <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Beispielwerte laden
                     </button>
@@ -231,6 +234,48 @@
         </div>
     </div>
 
+    <!-- Firebase Cloud Sync Config Modal -->
+    <div id="cloud-config-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Echtzeit Cloud-Sync einrichten</h3>
+                </div>
+                <button onclick="closeCloudConfigModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-600 mb-3">
+                Auf GitHub Pages benötigst du ein **kostenloses Firebase-Projekt** (100% kostenfrei), damit sich eure Handys & Laptops untereinander live synchronisieren.
+            </p>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-700 space-y-1.5 mb-4">
+                <p class="font-semibold text-slate-900">So geht's in 2 Minuten:</p>
+                <ol class="list-decimal list-inside space-y-1 text-slate-600">
+                    <li>Gehe auf <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-600 underline font-medium">console.firebase.google.com</a> & erstelle ein Gratis-Projekt.</li>
+                    <li>Füge eine <strong>Web-App</strong> hinzu und kopiere das <code class="bg-slate-200 px-1 py-0.5 rounded">firebaseConfig</code> JSON.</li>
+                    <li>Aktiviere <strong>Firestore Database</strong> (im <em>Testmodus</em>) & <strong>Authentication</strong> (Methode: <em>Anonym</em>).</li>
+                </ol>
+            </div>
+
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Firebase Config JSON hier einfügen:</label>
+            <textarea id="firebase-config-input" rows="5" placeholder='{"apiKey": "AIzaSy...", "authDomain": "...", "projectId": "..."}' class="w-full text-xs font-mono p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-800 mb-4"></textarea>
+
+            <div class="flex gap-2">
+                <button onclick="saveCloudConfig()" class="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow transition">
+                    <i class="fa-solid fa-check me-1"></i> Speichern & Verbinden
+                </button>
+                <button onclick="clearCloudConfig()" class="py-2 px-3 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition" title="Zurücksetzen">
+                    Entfernen
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -324,15 +369,22 @@
             { id: 59, stageNum: 14, stage: "14", name: "Gloucester Cathedral (Harry Potter)", category: "Familien-Fokus", pass: "Sonstige", notes: "Original Drehorte für Hogwarts-Gänge & Troll-Lavaroom", r1: 0, r2: 0, r3: 0, r4: 0, comment: "" }
         ];
 
+        // Custom Firebase Config from LocalStorage or code override
+        const storedConfigStr = localStorage.getItem("suedengland_custom_firebase_config");
+        let customConfig = null;
+        if (storedConfigStr) {
+            try { customConfig = JSON.parse(storedConfigStr); } catch(e){}
+        }
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'suedengland-roadtrip';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        const firebaseConfig = customConfig || (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "demo-key",
             authDomain: "demo-app.firebaseapp.com",
             projectId: "demo-app",
             storageBucket: "demo-app.appspot.com",
             messagingSenderId: "100000000000",
             appId: "1:100000000000:web:demo"
-        };
+        });
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -356,6 +408,11 @@
         }
 
         async function initCloudSync() {
+            if (firebaseConfig.apiKey === "demo-key") {
+                updateSyncStatus("offline", "Lokal gesichert (Sync einrichten)");
+                return;
+            }
+
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     const userCred = await signInWithCustomToken(auth, __initial_auth_token);
@@ -744,6 +801,43 @@
                     console.error("Reset cloud sync error:", err);
                 }
             }
+        };
+
+        window.openCloudConfigModal = function() {
+            const modal = document.getElementById("cloud-config-modal");
+            const textarea = document.getElementById("firebase-config-input");
+            if (modal) modal.classList.remove("hidden");
+            if (textarea && customConfig) {
+                textarea.value = JSON.stringify(customConfig, null, 2);
+            }
+        };
+
+        window.closeCloudConfigModal = function() {
+            const modal = document.getElementById("cloud-config-modal");
+            if (modal) modal.classList.add("hidden");
+        };
+
+        window.saveCloudConfig = function() {
+            const textarea = document.getElementById("firebase-config-input");
+            if (!textarea) return;
+            try {
+                const parsed = JSON.parse(textarea.value.trim());
+                if (!parsed.apiKey || !parsed.projectId) {
+                    alert("Ungültige Config: 'apiKey' und 'projectId' werden mindestens benötigt.");
+                    return;
+                }
+                localStorage.setItem("suedengland_custom_firebase_config", JSON.stringify(parsed));
+                closeCloudConfigModal();
+                window.location.reload();
+            } catch (e) {
+                alert("Bitte gib ein gültiges JSON-Format ein.");
+            }
+        };
+
+        window.clearCloudConfig = function() {
+            localStorage.removeItem("suedengland_custom_firebase_config");
+            closeCloudConfigModal();
+            window.location.reload();
         };
 
         window.exportToCSV = function() {
