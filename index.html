@@ -261,7 +261,8 @@
 
         function saveLocalData() {
             localStorage.setItem("suedengland_poi_ratings", JSON.stringify(poiRatings));
-            updateStats();
+            // Statistik-Kacheln werden in renderTable() aktualisiert, das nach
+            // jedem Speichern aufgerufen wird.
         }
 
         // Fest hinterlegte Familien-Datenbank (Firebase Firestore).
