@@ -276,14 +276,21 @@
             appId: "1:628224264827:web:847e3437792c420f7330de"
         };
 
+        // ID der Firestore-Datenbank. Die Familien-Datenbank heißt "england27"
+        // (nicht die Standard-Datenbank "(default)"), daher muss sie explizit
+        // angesprochen werden.
+        const DEFAULT_FIRESTORE_DATABASE_ID = "england27";
+
         function initFirebaseIfAvailable() {
             // Manuell eingetragene Config (via Dialog) hat Vorrang als Override,
             // sonst wird die fest hinterlegte Familien-Datenbank genutzt.
             const configStr = localStorage.getItem("suedengland_custom_firebase_config");
             let firebaseConfig;
+            let databaseId = DEFAULT_FIRESTORE_DATABASE_ID;
             if (configStr) {
                 try {
                     firebaseConfig = JSON.parse(configStr);
+                    databaseId = "(default)"; // Eigene Override-Config nutzt Standard-Datenbank
                 } catch (e) {
                     console.error("Config error:", e);
                     updateSyncBadge("🔴 Config Ungültig", "bg-rose-500");
@@ -296,7 +303,7 @@
             try {
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
-                db = getFirestore(app);
+                db = getFirestore(app, databaseId);
 
                 signInAnonymously(auth).then(() => {
                     updateSyncBadge("🟢 Echtzeit-Sync aktiv", "bg-emerald-500");
