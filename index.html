@@ -264,15 +264,36 @@
             updateStats();
         }
 
+        // Fest hinterlegte Familien-Datenbank (Firebase Firestore).
+        // Damit synchronisieren alle Geräte automatisch geräteübergreifend,
+        // ohne dass pro Gerät eine Config eingefügt werden muss.
+        const DEFAULT_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyB7TOmcrCUL6UBr5UA3aS6i7bm75ylH_2Y",
+            authDomain: "enland27-54dc4.firebaseapp.com",
+            projectId: "enland27-54dc4",
+            storageBucket: "enland27-54dc4.firebasestorage.app",
+            messagingSenderId: "628224264827",
+            appId: "1:628224264827:web:847e3437792c420f7330de"
+        };
+
         function initFirebaseIfAvailable() {
+            // Manuell eingetragene Config (via Dialog) hat Vorrang als Override,
+            // sonst wird die fest hinterlegte Familien-Datenbank genutzt.
             const configStr = localStorage.getItem("suedengland_custom_firebase_config");
-            if (!configStr) {
-                updateSyncBadge("⚪ Lokal-Modus", "bg-slate-400");
-                return;
+            let firebaseConfig;
+            if (configStr) {
+                try {
+                    firebaseConfig = JSON.parse(configStr);
+                } catch (e) {
+                    console.error("Config error:", e);
+                    updateSyncBadge("🔴 Config Ungültig", "bg-rose-500");
+                    return;
+                }
+            } else {
+                firebaseConfig = DEFAULT_FIREBASE_CONFIG;
             }
 
             try {
-                const firebaseConfig = JSON.parse(configStr);
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
                 db = getFirestore(app);
