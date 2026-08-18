@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Südengland Roadtrip - POI Bewertungstabelle</title>
+    <title>England Reise 2027 - POI Bewertungstabelle</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
             <div>
-                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">🇬🇧 Südengland Roadtrip 2026</h1>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">🇬🇧 England Reise 2027</h1>
                 <p class="text-xs sm:text-sm text-slate-300">Bewertungstabelle & Routenplaner (Familie: 2 Erwachsene, 2 Kinder - 12 & 9 J.)</p>
             </div>
             
@@ -62,6 +62,7 @@
                     <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
                     <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
                     <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
+                    <option value="10">Etappe 10: London (Städtetrip)</option>
                 </select>
                 <select id="tag-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
                     <option value="ALL">Alle Kategorien</option>
@@ -77,7 +78,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Gesamt POIs</div>
-                <div id="stat-total" class="text-2xl font-bold text-slate-800">59</div>
+                <div id="stat-total" class="text-2xl font-bold text-slate-800">74</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Bewertet</div>
@@ -238,7 +239,24 @@
             { id: 58, station: 8, name: "Warwick Castle", area: "Stratford", tag: "Highlight", desc: "Erlebnisburg mit Ritterturnieren & Shows." },
 
             // Etappe 9
-            { id: 59, station: 9, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge)." }
+            { id: 59, station: 9, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge)." },
+
+            // Etappe 10 - London (Städtetrip, Harry-Potter-Fokus)
+            { id: 60, station: 10, name: "Warner Bros. Studio Tour London", area: "Leavesden", tag: "Highlight", desc: "HP-Drehort: Original-Filmsets - Große Halle, Winkelgasse, Gringotts & Gleis 9¾ mit Dampfzug." },
+            { id: 61, station: 10, name: "House of MinaLima", area: "Soho", tag: "Geheimtipp", desc: "HP-Drehort-Bezug: Galerie der Filmgrafiker (Karte des Rumtreibers, Tagesprophet) - Eintritt frei." },
+            { id: 62, station: 10, name: "Leadenhall Market", area: "City of London", tag: "Kultur", desc: "HP-Drehort: viktorianische Halle als Winkelgasse & Bull's Head Passage als Tropfender Kessel (Film 1)." },
+            { id: 63, station: 10, name: "Borough Market & Stoney Street", area: "Southwark", tag: "Familie", desc: "HP-Drehort: Eingang Tropfender Kessel (Gefangener von Askaban) + Traditions-Streetfood-Markt." },
+            { id: 64, station: 10, name: "Cecil Court", area: "West End", tag: "Geheimtipp", desc: "HP-Vorbild: Antiquariats-Gasse, optische Inspiration für die Winkelgasse." },
+            { id: 65, station: 10, name: "Gleis 9 ¾ (King's Cross Station)", area: "King's Cross", tag: "Familie", desc: "HP-Drehort: Foto am Gepäckwagen in der Mauer & offizieller Harry-Potter-Store." },
+            { id: 66, station: 10, name: "Millennium Bridge", area: "Bankside", tag: "Kultur", desc: "HP-Drehort: Todesser-Angriff aus dem Halbblutprinzen; freier Blick auf St. Paul's." },
+            { id: 67, station: 10, name: "Tower of London", area: "City of London", tag: "Highlight", desc: "900 Jahre Historie: Kronjuwelen, White Tower, Raben & Beefeater-Führungen." },
+            { id: 68, station: 10, name: "Tower Bridge", area: "City of London", tag: "Highlight", desc: "Ikonische viktorianische Klappbrücke über die Themse." },
+            { id: 69, station: 10, name: "Westminster Abbey", area: "Westminster", tag: "Kultur", desc: "Gotische Krönungskirche der britischen Monarchie." },
+            { id: 70, station: 10, name: "Big Ben & Houses of Parliament", area: "Westminster", tag: "Highlight", desc: "Wahrzeichen-Glockenturm & Palace of Westminster an der Themse." },
+            { id: 71, station: 10, name: "St. Pancras International", area: "King's Cross", tag: "Kultur", desc: "HP-Drehort: neugotische Fassade als Kulisse für den fliegenden Ford Anglia (Kammer des Schreckens)." },
+            { id: 72, station: 10, name: "Covent Garden", area: "West End", tag: "Familie", desc: "Lebhaftes Markt- & Platzensemble mit Straßenkünstlern." },
+            { id: 73, station: 10, name: "Themsefahrt mit Uber Boat (Thames Clippers)", area: "Themse", tag: "Familie", desc: "Linienboot Tower Pier - Westminster: Skyline-Panorama an Shard, Tate Modern & London Eye vorbei." },
+            { id: 74, station: 10, name: "St. Paul's Cathedral", area: "City of London", tag: "Kultur", desc: "Barocke Kuppelkathedrale von Christopher Wren." }
         ];
 
         // Global State
