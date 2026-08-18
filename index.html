@@ -36,6 +36,9 @@
                 <button onclick="openCloudConfigModal()" class="px-3 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 rounded-lg transition shadow">
                     ☁️ Sync einrichten
                 </button>
+                <button onclick="openPoiModal()" class="px-3 py-1.5 text-xs font-medium bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-lg transition shadow">
+                    ➕ POI hinzufügen
+                </button>
                 <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 rounded-lg transition shadow">
                     📥 CSV Export
                 </button>
@@ -63,6 +66,7 @@
                     <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
                     <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
                     <option value="10">Etappe 10: London (Städtetrip)</option>
+                    <option value="11">Etappe 11: Eigene POIs</option>
                 </select>
                 <select id="tag-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
                     <option value="ALL">Alle Kategorien</option>
@@ -72,6 +76,10 @@
                     <option value="Kultur">Kultur & Geschichte</option>
                     <option value="Natur">Natur & Landschaft</option>
                 </select>
+                <label class="flex items-center gap-1.5 text-sm text-slate-600 select-none cursor-pointer px-1">
+                    <input type="checkbox" id="hide-skipped" onchange="filterPOIs()" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                    Gestrichene ausblenden
+                </label>
             </div>
         </div>
 
@@ -109,6 +117,7 @@
                             <th class="p-3 text-center w-20 bg-slate-200/60">Ø Schnitt</th>
                             <th class="p-3 min-w-[180px]">Notizen / Anmerkungen</th>
                             <th class="p-3 text-center w-24">Karte</th>
+                            <th class="p-3 text-center w-28">Aktionen</th>
                         </tr>
                     </thead>
                     <tbody id="poi-table-body" class="divide-y divide-slate-200">
@@ -152,6 +161,66 @@
         </div>
     </div>
 
+    <!-- POI hinzufügen / bearbeiten -->
+    <div id="poi-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200">
+            <h3 id="poi-modal-title" class="text-lg font-bold text-slate-900 mb-4">➕ POI hinzufügen</h3>
+            <input type="hidden" id="poi-edit-id" value="">
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Name <span class="text-rose-500">*</span></label>
+                    <input type="text" id="poi-name" placeholder="z. B. London Eye" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Ort / Standort</label>
+                        <input type="text" id="poi-area" placeholder="z. B. South Bank" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Kategorie</label>
+                        <select id="poi-tag" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            <option value="Highlight">Top Highlight</option>
+                            <option value="Familie" selected>Familienfokus</option>
+                            <option value="Geheimtipp">Geheimtipp</option>
+                            <option value="Kultur">Kultur & Geschichte</option>
+                            <option value="Natur">Natur & Landschaft</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Etappe</label>
+                    <select id="poi-station" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        <option value="1">Etappe 1: Dover - Rye - Brighton</option>
+                        <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
+                        <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
+                        <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
+                        <option value="5">Etappe 5: Salcombe & Heligan</option>
+                        <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
+                        <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
+                        <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
+                        <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
+                        <option value="10">Etappe 10: London (Städtetrip)</option>
+                        <option value="11" selected>Etappe 11: Eigene POIs</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Beschreibung</label>
+                    <textarea id="poi-desc" rows="2" placeholder="Kurze Beschreibung..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center gap-2 mt-5">
+                <button onclick="closePoiModal()" class="px-4 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+                    Abbrechen
+                </button>
+                <button onclick="savePoiFromModal()" class="px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition shadow">
+                    Speichern
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
         Statusmeldung
@@ -160,10 +229,13 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, deleteField, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- 59 POIs DATA ARRAY ---
-        const pois = [
+        // --- BASIS-POIs (Erst-Seed) ---
+        // Diese Liste dient nur noch als einmaliger Seed. Sobald sie nach
+        // localStorage/Firebase migriert wurde, ist die App die Wahrheit;
+        // spätere Änderungen an diesem Array erscheinen NICHT mehr automatisch.
+        const SEED_POIS = [
             // Etappe 1
             { id: 1, station: 1, name: "Dover Castle & Secret Wartime Tunnels", area: "Dover", tag: "Highlight", desc: "Mächtige Burg & unterirdische Weltkriegstunnel." },
             { id: 2, station: 1, name: "White Cliffs of Dover (South Foreland Lighthouse)", area: "Dover", tag: "Natur", desc: "Spaziergang entlang der berühmten Kreidefelsen." },
@@ -261,15 +333,19 @@
 
         // Global State
         let poiRatings = {};
+        let poiData = {};        // Map { id: {id, station, name, area, tag, desc, skip} }
         let db = null;
         let unsubscribe = null;
+        let unsubscribePois = null;
 
         window.addEventListener('DOMContentLoaded', () => {
+            loadLocalPois();
             loadLocalData();
             initFirebaseIfAvailable();
             renderTable();
         });
 
+        // --- Bewertungen (unverändert, per id verknüpft) ---
         function loadLocalData() {
             const stored = localStorage.getItem("suedengland_poi_ratings");
             if (stored) {
@@ -281,6 +357,70 @@
             localStorage.setItem("suedengland_poi_ratings", JSON.stringify(poiRatings));
             // Statistik-Kacheln werden in renderTable() aktualisiert, das nach
             // jedem Speichern aufgerufen wird.
+        }
+
+        // --- POI-Liste (migriert nach localStorage/Firebase) ---
+        function seedMapFromArray(arr) {
+            const map = {};
+            arr.forEach(p => {
+                const key = String(p.id);
+                map[key] = { id: key, station: p.station, name: p.name, area: p.area, tag: p.tag, desc: p.desc, skip: false };
+            });
+            return map;
+        }
+
+        function loadLocalPois() {
+            const stored = localStorage.getItem("suedengland_pois");
+            if (stored) {
+                try { poiData = JSON.parse(stored); } catch (e) { poiData = {}; }
+            }
+            // Erst-Seed nur, wenn noch keine Liste existiert.
+            if (!poiData || Object.keys(poiData).length === 0) {
+                poiData = seedMapFromArray(SEED_POIS);
+                saveLocalPois();
+            }
+        }
+
+        function saveLocalPois() {
+            localStorage.setItem("suedengland_pois", JSON.stringify(poiData));
+        }
+
+        // Sortierschlüssel: Basis-POIs (numerische id) zuerst, eigene (custom-<ts>) danach.
+        function poiSortKey(p) {
+            const n = Number(p.id);
+            if (!isNaN(n)) return n;
+            const m = String(p.id).match(/custom-(\d+)/);
+            return m ? Number(m[1]) : Number.MAX_SAFE_INTEGER;
+        }
+
+        // Map -> sortiertes Array: gestrichene ans Ende, dann nach Etappe, dann Sortierschlüssel.
+        function getPoisArray() {
+            return Object.values(poiData).sort((a, b) => {
+                const sa = a.skip ? 1 : 0, sb = b.skip ? 1 : 0;
+                if (sa !== sb) return sa - sb;
+                const stA = Number(a.station) || 99, stB = Number(b.station) || 99;
+                if (stA !== stB) return stA - stB;
+                return poiSortKey(a) - poiSortKey(b);
+            });
+        }
+
+        // Cloud-Persistenz für POIs
+        async function persistPoiRemote(id) {
+            if (!db) return;
+            const poisRef = doc(db, "suedengland", "pois");
+            await setDoc(poisRef, { [id]: poiData[id] }, { merge: true });
+        }
+
+        async function removePoiRemote(id) {
+            if (!db) return;
+            const poisRef = doc(db, "suedengland", "pois");
+            await updateDoc(poisRef, { [id]: deleteField() });
+        }
+
+        async function removeRatingRemote(id) {
+            if (!db) return;
+            const ratingsRef = doc(db, "suedengland", "family_ratings");
+            await updateDoc(ratingsRef, { [id]: deleteField() });
         }
 
         // Fest hinterlegte Familien-Datenbank (Firebase Firestore).
@@ -327,6 +467,7 @@
                 signInAnonymously(auth).then(() => {
                     updateSyncBadge("🟢 Echtzeit-Sync aktiv", "bg-emerald-500");
                     subscribeToCloud();
+                    subscribeToPoisCloud();
                 }).catch(err => {
                     console.error("Auth error:", err);
                     updateSyncBadge("🔴 Sync-Fehler", "bg-rose-500");
@@ -354,6 +495,25 @@
             });
         }
 
+        function subscribeToPoisCloud() {
+            if (!db) return;
+            const poisRef = doc(db, "suedengland", "pois");
+
+            unsubscribePois = onSnapshot(poisRef, (snapshot) => {
+                if (snapshot.exists() && Object.keys(snapshot.data()).length > 0) {
+                    // Cloud ist die Wahrheit
+                    poiData = snapshot.data();
+                    saveLocalPois();
+                    renderTable();
+                } else {
+                    // Cloud-Liste noch leer -> einmalig mit lokaler (geseedeter) Liste befüllen
+                    setDoc(poisRef, poiData, { merge: true }).catch(e => console.error("POI-Seed fehlgeschlagen:", e));
+                }
+            }, (error) => {
+                console.error("Firestore POI error:", error);
+            });
+        }
+
         function updateSyncBadge(text, colorClass) {
             document.getElementById("sync-text").innerText = text;
             const dot = document.getElementById("sync-dot");
@@ -365,6 +525,7 @@
             const searchVal = document.getElementById("search-input").value.toLowerCase();
             const stationVal = document.getElementById("station-filter").value;
             const tagVal = document.getElementById("tag-filter").value;
+            const hideSkipped = document.getElementById("hide-skipped").checked;
 
             tbody.innerHTML = "";
 
@@ -372,25 +533,34 @@
             let favCount = 0;
             let totalSum = 0;
             let totalValidPois = 0;
+            let totalActive = 0;   // nicht gestrichene POIs (Basis der Statistik)
+            let rowNum = 0;
 
-            pois.forEach((poi) => {
-                // Filters
-                if (stationVal !== "ALL" && poi.station.toString() !== stationVal) return;
-                if (tagVal !== "ALL" && poi.tag !== tagVal) return;
-                if (searchVal && !poi.name.toLowerCase().includes(searchVal) && !poi.area.toLowerCase().includes(searchVal) && !poi.desc.toLowerCase().includes(searchVal)) return;
+            getPoisArray().forEach((poi) => {
+                const isSkipped = !!poi.skip;
 
                 const data = poiRatings[poi.id] || { r1: "", r2: "", r3: "", r4: "", note: "" };
-                
-                // Calculate average
                 const nums = [parseFloat(data.r1), parseFloat(data.r2), parseFloat(data.r3), parseFloat(data.r4)].filter(n => !isNaN(n) && n > 0);
                 const avg = nums.length > 0 ? (nums.reduce((a,b) => a+b, 0) / nums.length).toFixed(1) : "-";
 
-                if (nums.length > 0) {
-                    ratedCount++;
-                    totalSum += parseFloat(avg);
-                    totalValidPois++;
-                    if (parseFloat(avg) >= 8.0) favCount++;
+                // Statistik über die GESAMTE Liste (nur nicht gestrichene), unabhängig von Filtern
+                if (!isSkipped) {
+                    totalActive++;
+                    if (nums.length > 0) {
+                        ratedCount++;
+                        totalSum += parseFloat(avg);
+                        totalValidPois++;
+                        if (parseFloat(avg) >= 8.0) favCount++;
+                    }
                 }
+
+                // Filter für die Anzeige
+                if (stationVal !== "ALL" && String(poi.station) !== stationVal) return;
+                if (tagVal !== "ALL" && poi.tag !== tagVal) return;
+                if (searchVal && !(poi.name || '').toLowerCase().includes(searchVal) && !(poi.area || '').toLowerCase().includes(searchVal) && !(poi.desc || '').toLowerCase().includes(searchVal)) return;
+                if (hideSkipped && isSkipped) return;
+
+                rowNum++;
 
                 // Tag colors
                 let tagColor = "bg-slate-100 text-slate-700";
@@ -399,48 +569,56 @@
                 if (poi.tag === "Geheimtipp") tagColor = "bg-purple-100 text-purple-800";
                 if (poi.tag === "Natur") tagColor = "bg-emerald-100 text-emerald-800";
 
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name + ' ' + poi.area + ' England')}`;
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' England')}`;
+                const idJs = String(poi.id).replace(/'/g, "\\'");
+                const noteVal = (data.note || '').replace(/"/g, '&quot;');
 
                 const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-50/80 transition text-slate-700";
+                tr.className = "hover:bg-slate-50/80 transition text-slate-700" + (isSkipped ? " opacity-50 bg-slate-50" : "");
                 tr.innerHTML = `
-                    <td class="p-3 text-center text-xs font-mono text-slate-400">${poi.id}</td>
+                    <td class="p-3 text-center text-xs font-mono text-slate-400">${rowNum}</td>
                     <td class="p-3">
-                        <div class="font-semibold text-slate-900">${poi.name}</div>
-                        <div class="text-xs text-slate-500">${poi.area} • ${poi.desc}</div>
+                        <div class="font-semibold text-slate-900 ${isSkipped ? 'line-through' : ''}">${poi.name || ''}${isSkipped ? ' <span class="text-[10px] font-normal text-rose-500 no-underline">(wird nicht besucht)</span>' : ''}</div>
+                        <div class="text-xs text-slate-500">${poi.area || ''}${(poi.area && poi.desc) ? ' • ' : ''}${poi.desc || ''}</div>
                     </td>
                     <td class="p-3">
-                        <span class="inline-block px-2 py-0.5 rounded-md text-xs font-medium ${tagColor}">${poi.tag}</span>
+                        <span class="inline-block px-2 py-0.5 rounded-md text-xs font-medium ${tagColor}">${poi.tag || ''}</span>
                     </td>
                     <td class="p-3 text-center">
-                        <input type="number" min="1" max="10" value="${data.r1 || ''}" onchange="updateRating(${poi.id}, 'r1', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                        <input type="number" min="1" max="10" value="${data.r1 || ''}" onchange="updateRating('${idJs}', 'r1', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
                     </td>
                     <td class="p-3 text-center">
-                        <input type="number" min="1" max="10" value="${data.r2 || ''}" onchange="updateRating(${poi.id}, 'r2', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                        <input type="number" min="1" max="10" value="${data.r2 || ''}" onchange="updateRating('${idJs}', 'r2', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
                     </td>
                     <td class="p-3 text-center">
-                        <input type="number" min="1" max="10" value="${data.r3 || ''}" onchange="updateRating(${poi.id}, 'r3', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                        <input type="number" min="1" max="10" value="${data.r3 || ''}" onchange="updateRating('${idJs}', 'r3', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
                     </td>
                     <td class="p-3 text-center">
-                        <input type="number" min="1" max="10" value="${data.r4 || ''}" onchange="updateRating(${poi.id}, 'r4', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
+                        <input type="number" min="1" max="10" value="${data.r4 || ''}" onchange="updateRating('${idJs}', 'r4', this.value)" class="w-12 text-center p-1 border rounded focus:ring-2 focus:ring-amber-500 focus:outline-none text-sm font-semibold">
                     </td>
                     <td class="p-3 text-center bg-slate-100/60 font-bold ${avg >= 8 ? 'text-amber-600' : 'text-slate-800'}">
                         ${avg}
                     </td>
                     <td class="p-3">
-                        <input type="text" value="${data.note || ''}" placeholder="Notiz..." onchange="updateRating(${poi.id}, 'note', this.value)" class="w-full p-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        <input type="text" value="${noteVal}" placeholder="Notiz..." onchange="updateRating('${idJs}', 'note', this.value)" class="w-full p-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
                     </td>
                     <td class="p-3 text-center">
                         <a href="${mapsUrl}" target="_blank" class="inline-flex items-center justify-center px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded text-xs font-medium border border-rose-200 transition">
                             📍 Maps
                         </a>
                     </td>
+                    <td class="p-3 text-center whitespace-nowrap">
+                        <button onclick="openPoiModal('${idJs}')" title="Bearbeiten" class="px-1.5 py-1 hover:bg-slate-100 rounded transition">✏️</button>
+                        <button onclick="toggleSkip('${idJs}')" title="${isSkipped ? 'Wieder aktivieren' : 'Wird nicht besucht'}" class="px-1.5 py-1 hover:bg-slate-100 rounded transition">${isSkipped ? '↩️' : '🚫'}</button>
+                        <button onclick="deletePoi('${idJs}')" title="Löschen" class="px-1.5 py-1 hover:bg-rose-50 rounded transition">🗑️</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            // Update stats
-            document.getElementById("stat-rated").innerText = `${ratedCount} / ${pois.length}`;
+            // Update stats (nur nicht gestrichene POIs)
+            document.getElementById("stat-total").innerText = totalActive;
+            document.getElementById("stat-rated").innerText = `${ratedCount} / ${totalActive}`;
             document.getElementById("stat-favorites").innerText = favCount;
             document.getElementById("stat-avg").innerText = totalValidPois > 0 ? (totalSum / totalValidPois).toFixed(1) : "-";
         };
@@ -476,15 +654,16 @@
 
         window.exportToCSV = function() {
             let csv = "\uFEFF"; // UTF-8 BOM
-            csv += "ID;Etappe;POI Name;Standort;Kategorie;Erwachsener 1;Erwachsener 2;Kind 1 (12J);Kind 2 (9J);Durchschnitt;Notizen;Google Maps Link\n";
+            csv += "ID;Etappe;POI Name;Standort;Kategorie;Status;Erwachsener 1;Erwachsener 2;Kind 1 (12J);Kind 2 (9J);Durchschnitt;Notizen;Google Maps Link\n";
 
-            pois.forEach(poi => {
+            getPoisArray().forEach(poi => {
                 const data = poiRatings[poi.id] || { r1: "", r2: "", r3: "", r4: "", note: "" };
                 const nums = [parseFloat(data.r1), parseFloat(data.r2), parseFloat(data.r3), parseFloat(data.r4)].filter(n => !isNaN(n) && n > 0);
                 const avg = nums.length > 0 ? (nums.reduce((a,b) => a+b, 0) / nums.length).toFixed(1) : "";
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name + ' ' + poi.area + ' England')}`;
+                const status = poi.skip ? "gestrichen" : "besucht";
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' England')}`;
 
-                csv += `"${poi.id}";"${poi.station}";"${poi.name.replace(/"/g, '""')}";"${poi.area}";"${poi.tag}";"${data.r1 || ''}";"${data.r2 || ''}";"${data.r3 || ''}";"${data.r4 || ''}";"${avg}";"${(data.note || '').replace(/"/g, '""')}";"${mapsUrl}"\n`;
+                csv += `"${poi.id}";"${poi.station || ''}";"${(poi.name || '').replace(/"/g, '""')}";"${poi.area || ''}";"${poi.tag || ''}";"${status}";"${data.r1 || ''}";"${data.r2 || ''}";"${data.r3 || ''}";"${data.r4 || ''}";"${avg}";"${(data.note || '').replace(/"/g, '""')}";"${mapsUrl}"\n`;
             });
 
             const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -530,6 +709,89 @@
             closeCloudConfigModal();
             showToast("⚪ Zurueck zum Lokal-Modus. Seite laedt neu...");
             setTimeout(() => window.location.reload(), 1000);
+        };
+
+        // --- POI hinzufügen / bearbeiten / löschen / streichen ---
+        window.openPoiModal = function(id) {
+            const title = document.getElementById("poi-modal-title");
+            document.getElementById("poi-edit-id").value = id || "";
+            if (id && poiData[id]) {
+                const p = poiData[id];
+                title.innerText = "✏️ POI bearbeiten";
+                document.getElementById("poi-name").value = p.name || "";
+                document.getElementById("poi-area").value = p.area || "";
+                document.getElementById("poi-tag").value = p.tag || "Familie";
+                document.getElementById("poi-station").value = String(p.station || 11);
+                document.getElementById("poi-desc").value = p.desc || "";
+            } else {
+                title.innerText = "➕ POI hinzufügen";
+                document.getElementById("poi-name").value = "";
+                document.getElementById("poi-area").value = "";
+                document.getElementById("poi-tag").value = "Familie";
+                document.getElementById("poi-station").value = "11";
+                document.getElementById("poi-desc").value = "";
+            }
+            document.getElementById("poi-modal").classList.remove("hidden");
+        };
+
+        window.closePoiModal = function() {
+            document.getElementById("poi-modal").classList.add("hidden");
+        };
+
+        window.savePoiFromModal = async function() {
+            const editId = document.getElementById("poi-edit-id").value;
+            const name = document.getElementById("poi-name").value.trim();
+            if (!name) { alert("Bitte einen Namen eingeben!"); return; }
+            const area = document.getElementById("poi-area").value.trim();
+            const tag = document.getElementById("poi-tag").value;
+            const station = Number(document.getElementById("poi-station").value);
+            const desc = document.getElementById("poi-desc").value.trim();
+
+            let id = editId;
+            let skip = false;
+            if (editId && poiData[editId]) {
+                skip = poiData[editId].skip || false;
+            } else {
+                id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+            }
+            poiData[id] = { id, station, name, area, tag, desc, skip };
+            saveLocalPois();
+            try {
+                await persistPoiRemote(id);
+                showToast(db ? "☁️ POI in Cloud gespeichert!" : "💾 POI gespeichert!");
+            } catch (e) {
+                console.error("POI-Cloud-Fehler:", e);
+                showToast("⚠️ Lokal gespeichert (Cloud-Fehler)");
+            }
+            closePoiModal();
+            renderTable();
+        };
+
+        window.toggleSkip = async function(id) {
+            if (!poiData[id]) return;
+            poiData[id].skip = !poiData[id].skip;
+            saveLocalPois();
+            try { await persistPoiRemote(id); } catch (e) { console.error(e); }
+            renderTable();
+            showToast(poiData[id].skip ? "🚫 Als 'wird nicht besucht' markiert" : "↩️ Wieder aktiviert");
+        };
+
+        window.deletePoi = async function(id) {
+            const p = poiData[id];
+            if (!p) return;
+            if (!confirm(`POI "${p.name}" wirklich löschen? Die zugehörigen Bewertungen werden ebenfalls entfernt.`)) return;
+            delete poiData[id];
+            delete poiRatings[id];
+            saveLocalPois();
+            saveLocalData();
+            try {
+                await removePoiRemote(id);
+                await removeRatingRemote(id);
+            } catch (e) {
+                console.error("Cloud-Löschfehler:", e);
+            }
+            renderTable();
+            showToast("🗑️ POI gelöscht");
         };
 
         function showToast(msg) {
