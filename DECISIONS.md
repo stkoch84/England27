@@ -61,3 +61,48 @@ Anforderung: POIs im Frontend hinzufügen/bearbeiten/löschen und auf „wird ni
   `subscribeToPoisCloud`, `renderTable` (Map-Quelle + skip + Aktionsspalte), POI-Modal + Handler
   (`openPoiModal`/`savePoiFromModal`/`toggleSkip`/`deletePoi`), Header-Button „➕ POI hinzufügen",
   Filter „Gestrichene ausblenden" + „Etappe 11", CSV-Export (+Status-Spalte).
+
+---
+
+# Reiseplan-Konzept & Etappen-Restrukturierung (Feature 3)
+
+Anforderung: Aus den abgeschlossenen Bewertungen einen konkreten Reiseplan ableiten und die
+Etappen (`station`) an die tatsächliche Route anpassen. Vollständig durchgegrillt – Details siehe
+[REISEPLAN-KONZEPT.md](REISEPLAN-KONZEPT.md).
+
+## Entscheidungen
+1. **Route:** 17 Nächte (So 27.06 – Mi 14.07.2027), Fähre Calais↔Dover. Schleife **gegen den
+   Uhrzeigersinn** (Inland raus, Küste zurück), voller West-Sweep **bis Land's End**, Isle of Wight rein.
+2. **Streichungen:** Sussex komplett (Rye/Brighton inkl. Seven Sisters), Policy-Cut < 7.0, sowie
+   „Kür ohne Platz". Ergebnis: **47 geplant · 28 gestrichen** (Dover Castle 6.5 als Null-Umweg behalten).
+3. **`station` neu 1–9 = geografische Region in Routenreihenfolge** (1 Dover · 2 London · 3 Cotswolds &
+   Warwickshire · 4 Bath & Somerset · 5 Nord-Cornwall & Tintagel · 6 Cornwall-Westspitze · 7 South Devon
+   & Dartmoor · 8 Dorset · 9 Isle of Wight). Etappen 10/11 entfallen; British Museum → Etappe 2.
+   Gestrichene POIs wandern in ihre nächstgelegene Region + `skip=true`.
+4. **Auswahl-Policy:** Ø ≥ 8.0 = Pflicht · 7.0–7.9 = Kür (nur on-route) · < 7.0 = raus.
+5. **Datenmigration (Live):** `suedengland/pois` per Firestore-REST-PATCH umgeschrieben (64 Records:
+   `station` + `skip`). `family_ratings` **unberührt**. Backup vor dem Push gezogen.
+
+## Betroffene Datei
+- `index.html`: `SEED_POIS` (neue `station` + `skip`, `seedMapFromArray` liest `p.skip`),
+  Etappen-Dropdown (Filter + Modal) auf 1–9, Modal-Default Etappe 2, Kachel „Gesamt POIs" 74 → 47.
+
+---
+
+# Unterkünfte-Feature (Feature 4)
+
+Anforderung: Finale Hotels/Ferienwohnungen pro Übernachtung erfassen (Name, Gesamtpreis, URL, Maps-Link).
+
+## Entscheidungen
+1. **Entität = Aufenthalt, nicht Etappe.** Ein Eintrag pro Übernachtungsblock (Dover 2×, Dorset 0×) →
+   **9 vorbefüllte Aufenthalte**. Verworfen: Kopplung an `station` (leaky wegen Dover-doppelt/Dorset-leer).
+2. **Preis = Gesamt** (nicht pro Nacht), **Währung € (GBP verworfen)**, Summenzeile addiert alle Preise.
+3. **Maps-Link:** manuelles Feld; Fallback Auto-Suche nach Name, falls leer.
+4. **Speicher/Sync:** eigenes Firestore-Doc `suedengland/accommodations` (Map keyed by `stay-N`) +
+   localStorage `suedengland_accommodations`, gleiche Seed-/Realtime-Mechanik wie POIs. POI-/Bewertungs-
+   daten unberührt.
+
+## Betroffene Datei
+- `index.html`: `SEED_STAYS`, State `accommodations`, `loadLocalStays`/`saveLocalStays`/`getStaysArray`/
+  `persistStayRemote`/`removeStayRemote`/`subscribeToStaysCloud`, `renderStays`/`updateStay`/`addStay`/
+  `deleteStay`, neue Sektion „🛏 Unterkünfte" mit Summenzeile.

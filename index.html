@@ -61,17 +61,15 @@
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                 <select id="station-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
                     <option value="ALL">Alle Etappen</option>
-                    <option value="1">Etappe 1: Dover - Rye - Brighton</option>
-                    <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
-                    <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
-                    <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
-                    <option value="5">Etappe 5: Salcombe & Heligan</option>
-                    <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
-                    <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
-                    <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
-                    <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
-                    <option value="10">Etappe 10: London (Städtetrip)</option>
-                    <option value="11">Etappe 11: Eigene POIs</option>
+                    <option value="1">Etappe 1: Dover</option>
+                    <option value="2">Etappe 2: London</option>
+                    <option value="3">Etappe 3: Cotswolds & Warwickshire</option>
+                    <option value="4">Etappe 4: Bath & Somerset</option>
+                    <option value="5">Etappe 5: Nord-Cornwall & Tintagel</option>
+                    <option value="6">Etappe 6: Cornwall-Westspitze</option>
+                    <option value="7">Etappe 7: South Devon & Dartmoor</option>
+                    <option value="8">Etappe 8: Dorset (Jurassic-Stopps)</option>
+                    <option value="9">Etappe 9: Isle of Wight</option>
                 </select>
                 <select id="tag-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
                     <option value="ALL">Alle Kategorien</option>
@@ -91,7 +89,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Gesamt POIs</div>
-                <div id="stat-total" class="text-2xl font-bold text-slate-800">74</div>
+                <div id="stat-total" class="text-2xl font-bold text-slate-800">47</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Bewertet</div>
@@ -127,6 +125,43 @@
                     </thead>
                     <tbody id="poi-table-body" class="divide-y divide-slate-200">
                         <!-- Dynamic POI Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Unterkünfte -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+            <div class="flex flex-wrap justify-between items-center gap-3 p-4 border-b border-slate-200 bg-slate-50">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">🛏 Unterkünfte</h2>
+                    <p class="text-xs text-slate-500">Finale Hotels / Ferienwohnungen pro Übernachtung · Preis = Gesamt (nicht pro Nacht)</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <div class="text-xs text-slate-500 font-medium">Summe Unterkünfte</div>
+                        <div id="stay-total" class="text-xl font-bold text-emerald-600">€ 0</div>
+                    </div>
+                    <button onclick="addStay()" class="px-3 py-1.5 text-xs font-medium bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-lg transition shadow">➕ Aufenthalt</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+                            <th class="p-3 w-10 text-center">#</th>
+                            <th class="p-3 min-w-[150px]">Basis</th>
+                            <th class="p-3 w-16 text-center">Nächte</th>
+                            <th class="p-3 w-28">Datum</th>
+                            <th class="p-3 min-w-[200px]">Unterkunft (Name)</th>
+                            <th class="p-3 w-32 text-center">Preis (€ ges.)</th>
+                            <th class="p-3 w-24 text-center">Website</th>
+                            <th class="p-3 text-center w-20">Karte</th>
+                            <th class="p-3 text-center w-16">Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stay-table-body" class="divide-y divide-slate-200">
+                        <!-- Dynamic Stay Rows -->
                     </tbody>
                 </table>
             </div>
@@ -196,17 +231,15 @@
                 <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Etappe</label>
                     <select id="poi-station" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                        <option value="1">Etappe 1: Dover - Rye - Brighton</option>
-                        <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
-                        <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
-                        <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
-                        <option value="5">Etappe 5: Salcombe & Heligan</option>
-                        <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
-                        <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
-                        <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
-                        <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
-                        <option value="10">Etappe 10: London (Städtetrip)</option>
-                        <option value="11" selected>Etappe 11: Eigene POIs</option>
+                        <option value="1">Etappe 1: Dover</option>
+                        <option value="2" selected>Etappe 2: London</option>
+                        <option value="3">Etappe 3: Cotswolds & Warwickshire</option>
+                        <option value="4">Etappe 4: Bath & Somerset</option>
+                        <option value="5">Etappe 5: Nord-Cornwall & Tintagel</option>
+                        <option value="6">Etappe 6: Cornwall-Westspitze</option>
+                        <option value="7">Etappe 7: South Devon & Dartmoor</option>
+                        <option value="8">Etappe 8: Dorset (Jurassic-Stopps)</option>
+                        <option value="9">Etappe 9: Isle of Wight</option>
                     </select>
                 </div>
                 <div>
@@ -241,113 +274,114 @@
         // localStorage/Firebase migriert wurde, ist die App die Wahrheit;
         // spätere Änderungen an diesem Array erscheinen NICHT mehr automatisch.
         const SEED_POIS = [
-            // Etappe 1
-            { id: 1, station: 1, name: "Dover Castle & Secret Wartime Tunnels", area: "Dover", tag: "Highlight", desc: "Mächtige Burg & unterirdische Weltkriegstunnel." },
-            { id: 2, station: 1, name: "White Cliffs of Dover (South Foreland Lighthouse)", area: "Dover", tag: "Natur", desc: "Spaziergang entlang der berühmten Kreidefelsen." },
-            { id: 3, station: 1, name: "Rye Historic Town & Mermaid Street", area: "Rye", tag: "Kultur", desc: "Kopfsteinpflaster, Fachwerkhäuser & Schmugglergeschichte." },
-            { id: 4, station: 1, name: "Camber Sands Beach", area: "Rye", tag: "Familie", desc: "Riesiger Sandstrand mit Dünenlandschaft." },
-            { id: 5, station: 1, name: "Bodiam Castle", area: "Rye", tag: "Highlight", desc: "Märchenhafte Wasserburg mit Wassergraben." },
-            { id: 6, station: 1, name: "Dungeness Nature Reserve & Miniature Railway", area: "Rye", tag: "Geheimtipp", desc: "Kurioses Kieselstein-Kap & Minidampfbahn." },
-            { id: 7, station: 1, name: "Royal Pavilion Brighton", area: "Brighton", tag: "Kultur", desc: "Exotischer Palast im indisch-chinesischen Stil." },
-            { id: 8, station: 1, name: "Brighton Palace Pier & Seafront", area: "Brighton", tag: "Familie", desc: "Klassischer britischer Pier mit Fahrgeschäften." },
-            { id: 9, station: 1, name: "British Airways i360 Lookout", area: "Brighton", tag: "Highlight", desc: "Gläserner Aussichtsturm mit Rundumblick." },
-            { id: 10, station: 1, name: "Seven Sisters Country Park & Birling Gap", area: "Brighton", tag: "Natur", desc: "Spektakuläre Kreidefelsenküste." },
-            { id: 11, station: 1, name: "Devil's Dyke (South Downs)", area: "Brighton", tag: "Geheimtipp", desc: "Tiefes Trockental mit toller Aussicht & Drachenfliegern." },
+            { id: 1, station: 1, name: "Dover Castle & Secret Wartime Tunnels", area: "Dover", tag: "Highlight", desc: "Mächtige Burg & unterirdische Weltkriegstunnel.", skip: false },
+            { id: 2, station: 1, name: "White Cliffs of Dover (South Foreland Lighthouse)", area: "Dover", tag: "Natur", desc: "Spaziergang entlang der berühmten Kreidefelsen.", skip: false },
+            { id: 3, station: 1, name: "Rye Historic Town & Mermaid Street", area: "Rye", tag: "Kultur", desc: "Kopfsteinpflaster, Fachwerkhäuser & Schmugglergeschichte.", skip: true },
+            { id: 4, station: 1, name: "Camber Sands Beach", area: "Rye", tag: "Familie", desc: "Riesiger Sandstrand mit Dünenlandschaft.", skip: true },
+            { id: 5, station: 1, name: "Bodiam Castle", area: "Rye", tag: "Highlight", desc: "Märchenhafte Wasserburg mit Wassergraben.", skip: true },
+            { id: 6, station: 1, name: "Dungeness Nature Reserve & Miniature Railway", area: "Rye", tag: "Geheimtipp", desc: "Kurioses Kieselstein-Kap & Minidampfbahn.", skip: true },
+            { id: 7, station: 1, name: "Royal Pavilion Brighton", area: "Brighton", tag: "Kultur", desc: "Exotischer Palast im indisch-chinesischen Stil.", skip: true },
+            { id: 8, station: 1, name: "Brighton Palace Pier & Seafront", area: "Brighton", tag: "Familie", desc: "Klassischer britischer Pier mit Fahrgeschäften.", skip: true },
+            { id: 9, station: 1, name: "British Airways i360 Lookout", area: "Brighton", tag: "Highlight", desc: "Gläserner Aussichtsturm mit Rundumblick.", skip: true },
+            { id: 10, station: 1, name: "Seven Sisters Country Park & Birling Gap", area: "Brighton", tag: "Natur", desc: "Spektakuläre Kreidefelsenküste.", skip: true },
+            { id: 11, station: 1, name: "Devil's Dyke (South Downs)", area: "Brighton", tag: "Geheimtipp", desc: "Tiefes Trockental mit toller Aussicht & Drachenfliegern.", skip: true },
+            { id: 12, station: 9, name: "The Needles Landmark & Chairlift", area: "Isle of Wight", tag: "Highlight", desc: "Felsnadeln im Meer & Sesselbahn zum Buntstrand.", skip: false },
+            { id: 13, station: 9, name: "Carisbrooke Castle & Esel-Brunnen", area: "Isle of Wight", tag: "Familie", desc: "Historische Burg mit berühmten Tret-Eseln.", skip: true },
+            { id: 14, station: 9, name: "Osborne House", area: "Isle of Wight", tag: "Kultur", desc: "Sommerresidenz von Königin Victoria.", skip: false },
+            { id: 15, station: 9, name: "Shanklin Chine & Old Village", area: "Isle of Wight", tag: "Natur", desc: "Malerische bewachsene Schlucht & Reetdachhäuser.", skip: false },
+            { id: 16, station: 9, name: "Blackgang Chine Theme Park", area: "Isle of Wight", tag: "Familie", desc: "Ältester Freizeitpark Englands mit Dinosauriern.", skip: true },
+            { id: 17, station: 9, name: "Robin Hill Country Park", area: "Isle of Wight", tag: "Familie", desc: "Abenteuerpark in der Natur mit Baumwipfelpfaden.", skip: false },
+            { id: 18, station: 8, name: "Bournemouth Beach & Pier", area: "Bournemouth", tag: "Familie", desc: "Kilometerlanger goldener Sandstrand.", skip: true },
+            { id: 19, station: 8, name: "Russell-Cotes Art Gallery & Museum", area: "Bournemouth", tag: "Kultur", desc: "Skurrile Jugendstil-Villa voller Weltreise-Schätze.", skip: true },
+            { id: 20, station: 8, name: "Hengistbury Head", area: "Bournemouth", tag: "Natur", desc: "Naturschutzgebiet mit Blick auf die Isle of Wight.", skip: true },
+            { id: 21, station: 8, name: "Old Harry Rocks", area: "Jurassic Coast", tag: "Highlight", desc: "Markante Kreidesäulen im Meer nahe Swanage.", skip: false },
+            { id: 22, station: 8, name: "Corfe Castle", area: "Jurassic Coast", tag: "Highlight", desc: "Dramatische Burgruine auf einem Hügel.", skip: true },
+            { id: 23, station: 8, name: "Lulworth Cove & Durdle Door", area: "Jurassic Coast", tag: "Highlight", desc: "Das berühmte natürliche Felsentor & Traumbucht.", skip: false },
+            { id: 24, station: 8, name: "Kimmeridge Bay & Fossiliensuche", area: "Jurassic Coast", tag: "Geheimtipp", desc: "Paradies für Fossiliensucher & Schnorchler.", skip: true },
+            { id: 25, station: 8, name: "Dorset Museum & Dinosaur Safari", area: "Dorset", tag: "Familie", desc: "Spannendes Museum zur Urzeitgeschichte.", skip: true },
+            { id: 26, station: 8, name: "Cerne Abbas Giant", area: "Dorset", tag: "Geheimtipp", desc: "Mysteröse gigantische Scharrbild-Figur im Rasen.", skip: true },
+            { id: 27, station: 8, name: "Abbotsbury Subtropical Gardens & Swannery", area: "Dorset", tag: "Familie", desc: "Tropenpark & die einzige Schwanenkolonie der Welt.", skip: true },
+            { id: 28, station: 7, name: "Exeter Cathedral & Underground Passages", area: "Exeter", tag: "Kultur", desc: "Gotische Kathedrale & geheimnisvolle Tunnel.", skip: false },
+            { id: 29, station: 7, name: "Torquay Harbour & Babbacombe Model Village", area: "Torquay", tag: "Familie", desc: "Miniaturdorf mit riesigen Gartenanlagen.", skip: false },
+            { id: 30, station: 7, name: "Kents Cavern Prehistoric Caves", area: "Torquay", tag: "Familie", desc: "Älteste Steinzeithöhle Großbritanniens.", skip: false },
+            { id: 31, station: 7, name: "Cockington Village", area: "Torquay", tag: "Geheimtipp", desc: "Idyllisches Dorf wie aus dem Märchenbuch.", skip: true },
+            { id: 32, station: 7, name: "Haytor Rocks & Dartmoor Ponies", area: "Dartmoor", tag: "Highlight", desc: "Granitfelsen besteigen & wildlebende Ponys treffen.", skip: false },
+            { id: 33, station: 7, name: "Postbridge Clapper Bridge", area: "Dartmoor", tag: "Natur", desc: "Uralte Steinplattenbrücke im Nationalpark.", skip: false },
+            { id: 34, station: 7, name: "Castle Drogo", area: "Dartmoor", tag: "Kultur", desc: "Das letzte in England erbaute Schloss.", skip: false },
+            { id: 35, station: 7, name: "Lydford Gorge & White Lady Waterfall", area: "Dartmoor", tag: "Natur", desc: "Tiefe Waldschlucht mit 30m Wasserfall.", skip: false },
+            { id: 36, station: 7, name: "Salcombe Harbour & Bootstour", area: "Salcombe", tag: "Natur", desc: "Malerischer Küstenort mit klarem Wasser.", skip: true },
+            { id: 37, station: 7, name: "Overbeck's Garden (National Trust)", area: "Salcombe", tag: "Geheimtipp", desc: "Exotischer Klippengarten mit Palmen.", skip: false },
+            { id: 38, station: 7, name: "Hope Cove & Coast Path Wanderung", area: "Salcombe", tag: "Natur", desc: "Traumhafte Küstenwanderung.", skip: true },
+            { id: 39, station: 6, name: "The Lost Gardens of Heligan", area: "Heligan", tag: "Highlight", desc: "Verzauberte Dschungel-Gärten mit Moosskulpturen.", skip: false },
+            { id: 40, station: 6, name: "St Michael's Mount", area: "Penzance/Falmouth", tag: "Highlight", desc: "Inselburg, die bei Ebbe zu Fuß erreichbar ist.", skip: false },
+            { id: 41, station: 6, name: "Pendennis Castle", area: "Falmouth", tag: "Familie", desc: "Tudor-Festung Heinrichs VIII. direkt am Meer.", skip: true },
+            { id: 42, station: 6, name: "National Maritime Museum Cornwall", area: "Falmouth", tag: "Familie", desc: "Erlebnismuseum rund um Schiffe & Ozeane.", skip: true },
+            { id: 43, station: 6, name: "Trebah Garden", area: "Falmouth", tag: "Natur", desc: "Subtropischer Schluchtgarten mit privatem Strand.", skip: false },
+            { id: 44, station: 6, name: "Minack Theatre", area: "Cornwall", tag: "Highlight", desc: "Spektakuläres Freilichttheater direkt in die Klippen gebaut.", skip: false },
+            { id: 45, station: 6, name: "Land's End Landmark", area: "Cornwall", tag: "Highlight", desc: "Westlichster Punkt Englands mit Erlebnispark.", skip: false },
+            { id: 46, station: 6, name: "Porthcurno Beach", area: "Cornwall", tag: "Natur", desc: "Karibikähnlicher Strand mit türkisblauem Wasser.", skip: false },
+            { id: 47, station: 6, name: "St. Ives Town, Tate & Beaches", area: "St. Ives", tag: "Highlight", desc: "Künstlerstadt mit wunderschönen Sandstränden.", skip: false },
+            { id: 48, station: 5, name: "Tintagel Castle & Merlin's Cave", area: "Tintagel", tag: "Highlight", desc: "Mythenumwobene König-Artus-Burg auf Felsen.", skip: false },
+            { id: 49, station: 5, name: "Boscastle Harbour", area: "Tintagel", tag: "Geheimtipp", desc: "Einzigartiger natürlicher Fjord-Hafen.", skip: true },
+            { id: 50, station: 5, name: "Clovelly Historic Village", area: "Clovelly", tag: "Highlight", desc: "Autofreies, steiles Fischerdorf mit Lasten-Eseln.", skip: false },
+            { id: 51, station: 5, name: "Barnstaple Historic Pannier Market", area: "Barnstaple", tag: "Kultur", desc: "Überdeckter historischer Marktplatz.", skip: true },
+            { id: 52, station: 5, name: "Valley of Rocks & Lynton Cliff Railway", area: "Exmoor", tag: "Highlight", desc: "Wilde Felslandschaft mit Ziegen & historische Standseilbahn.", skip: false },
+            { id: 53, station: 5, name: "Dunster Castle & Steam Railway", area: "Exmoor", tag: "Kultur", desc: "Schloss mit Parkanlage & Museumsdampfzug.", skip: true },
+            { id: 54, station: 5, name: "Tarr Steps Ancient Clapper Bridge", area: "Exmoor", tag: "Geheimtipp", desc: "Uralte Steinbrücke mitten im Fluss.", skip: true },
+            { id: 55, station: 4, name: "Cheddar Gorge & Caves", area: "Somerset", tag: "Highlight", desc: "Englands tiefste Schlucht mit Tropfsteinhöhlen.", skip: false },
+            { id: 56, station: 4, name: "Bath Roman Baths & Abbey", area: "Somerset", tag: "Highlight", desc: "Antike römische Bäder in UNESCO-Welterbestadt.", skip: false },
+            { id: 57, station: 3, name: "Stratford-upon-Avon & Shakespeare's House", area: "Stratford", tag: "Kultur", desc: "Geburtsort von Shakespeare mit Fachwerkflair.", skip: false },
+            { id: 58, station: 3, name: "Warwick Castle", area: "Stratford", tag: "Highlight", desc: "Erlebnisburg mit Ritterturnieren & Shows.", skip: false },
+            { id: 59, station: 3, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge).", skip: false },
+            { id: 60, station: 2, name: "Warner Bros. Studio Tour London", area: "Leavesden", tag: "Highlight", desc: "HP-Drehort: Original-Filmsets - Große Halle, Winkelgasse, Gringotts & Gleis 9¾ mit Dampfzug.", skip: false },
+            { id: 61, station: 2, name: "House of MinaLima", area: "Soho", tag: "Geheimtipp", desc: "HP-Drehort-Bezug: Galerie der Filmgrafiker (Karte des Rumtreibers, Tagesprophet) - Eintritt frei.", skip: false },
+            { id: 62, station: 2, name: "Leadenhall Market", area: "City of London", tag: "Kultur", desc: "HP-Drehort: viktorianische Halle als Winkelgasse & Bull's Head Passage als Tropfender Kessel (Film 1).", skip: false },
+            { id: 63, station: 2, name: "Borough Market & Stoney Street", area: "Southwark", tag: "Familie", desc: "HP-Drehort: Eingang Tropfender Kessel (Gefangener von Askaban) + Traditions-Streetfood-Markt.", skip: false },
+            { id: 64, station: 2, name: "Cecil Court", area: "West End", tag: "Geheimtipp", desc: "HP-Vorbild: Antiquariats-Gasse, optische Inspiration für die Winkelgasse.", skip: false },
+            { id: 65, station: 2, name: "Gleis 9 ¾ (King's Cross Station)", area: "King's Cross", tag: "Familie", desc: "HP-Drehort: Foto am Gepäckwagen in der Mauer & offizieller Harry-Potter-Store.", skip: false },
+            { id: 66, station: 2, name: "Millennium Bridge", area: "Bankside", tag: "Kultur", desc: "HP-Drehort: Todesser-Angriff aus dem Halbblutprinzen; freier Blick auf St. Paul's.", skip: false },
+            { id: 67, station: 2, name: "Tower of London", area: "City of London", tag: "Highlight", desc: "900 Jahre Historie: Kronjuwelen, White Tower, Raben & Beefeater-Führungen.", skip: false },
+            { id: 68, station: 2, name: "Tower Bridge", area: "City of London", tag: "Highlight", desc: "Ikonische viktorianische Klappbrücke über die Themse.", skip: false },
+            { id: 69, station: 2, name: "Westminster Abbey", area: "Westminster", tag: "Kultur", desc: "Gotische Krönungskirche der britischen Monarchie.", skip: false },
+            { id: 70, station: 2, name: "Big Ben & Houses of Parliament", area: "Westminster", tag: "Highlight", desc: "Wahrzeichen-Glockenturm & Palace of Westminster an der Themse.", skip: false },
+            { id: 71, station: 2, name: "St. Pancras International", area: "King's Cross", tag: "Kultur", desc: "HP-Drehort: neugotische Fassade als Kulisse für den fliegenden Ford Anglia (Kammer des Schreckens).", skip: false },
+            { id: 72, station: 2, name: "Covent Garden", area: "West End", tag: "Familie", desc: "Lebhaftes Markt- & Platzensemble mit Straßenkünstlern.", skip: false },
+            { id: 73, station: 2, name: "Themsefahrt mit Uber Boat (Thames Clippers)", area: "Themse", tag: "Familie", desc: "Linienboot Tower Pier - Westminster: Skyline-Panorama an Shard, Tate Modern & London Eye vorbei.", skip: false },
+            { id: 74, station: 2, name: "St. Paul's Cathedral", area: "City of London", tag: "Kultur", desc: "Barocke Kuppelkathedrale von Christopher Wren.", skip: false }
+        ];
 
-            // Etappe 2
-            { id: 12, station: 2, name: "The Needles Landmark & Chairlift", area: "Isle of Wight", tag: "Highlight", desc: "Felsnadeln im Meer & Sesselbahn zum Buntstrand." },
-            { id: 13, station: 2, name: "Carisbrooke Castle & Esel-Brunnen", area: "Isle of Wight", tag: "Familie", desc: "Historische Burg mit berühmten Tret-Eseln." },
-            { id: 14, station: 2, name: "Osborne House", area: "Isle of Wight", tag: "Kultur", desc: "Sommerresidenz von Königin Victoria." },
-            { id: 15, station: 2, name: "Shanklin Chine & Old Village", area: "Isle of Wight", tag: "Natur", desc: "Malerische bewachsene Schlucht & Reetdachhäuser." },
-            { id: 16, station: 2, name: "Blackgang Chine Theme Park", area: "Isle of Wight", tag: "Familie", desc: "Ältester Freizeitpark Englands mit Dinosauriern." },
-            { id: 17, station: 2, name: "Robin Hill Country Park", area: "Isle of Wight", tag: "Familie", desc: "Abenteuerpark in der Natur mit Baumwipfelpfaden." },
-            { id: 18, station: 2, name: "Bournemouth Beach & Pier", area: "Bournemouth", tag: "Familie", desc: "Kilometerlanger goldener Sandstrand." },
-            { id: 19, station: 2, name: "Russell-Cotes Art Gallery & Museum", area: "Bournemouth", tag: "Kultur", desc: "Skurrile Jugendstil-Villa voller Weltreise-Schätze." },
-            { id: 20, station: 2, name: "Hengistbury Head", area: "Bournemouth", tag: "Natur", desc: "Naturschutzgebiet mit Blick auf die Isle of Wight." },
-
-            // Etappe 3
-            { id: 21, station: 3, name: "Old Harry Rocks", area: "Jurassic Coast", tag: "Highlight", desc: "Markante Kreidesäulen im Meer nahe Swanage." },
-            { id: 22, station: 3, name: "Corfe Castle", area: "Jurassic Coast", tag: "Highlight", desc: "Dramatische Burgruine auf einem Hügel." },
-            { id: 23, station: 3, name: "Lulworth Cove & Durdle Door", area: "Jurassic Coast", tag: "Highlight", desc: "Das berühmte natürliche Felsentor & Traumbucht." },
-            { id: 24, station: 3, name: "Kimmeridge Bay & Fossiliensuche", area: "Jurassic Coast", tag: "Geheimtipp", desc: "Paradies für Fossiliensucher & Schnorchler." },
-            { id: 25, station: 3, name: "Dorset Museum & Dinosaur Safari", area: "Dorset", tag: "Familie", desc: "Spannendes Museum zur Urzeitgeschichte." },
-            { id: 26, station: 3, name: "Cerne Abbas Giant", area: "Dorset", tag: "Geheimtipp", desc: "Mysteröse gigantische Scharrbild-Figur im Rasen." },
-            { id: 27, station: 3, name: "Abbotsbury Subtropical Gardens & Swannery", area: "Dorset", tag: "Familie", desc: "Tropenpark & die einzige Schwanenkolonie der Welt." },
-
-            // Etappe 4
-            { id: 28, station: 4, name: "Exeter Cathedral & Underground Passages", area: "Exeter", tag: "Kultur", desc: "Gotische Kathedrale & geheimnisvolle Tunnel." },
-            { id: 29, station: 4, name: "Torquay Harbour & Babbacombe Model Village", area: "Torquay", tag: "Familie", desc: "Miniaturdorf mit riesigen Gartenanlagen." },
-            { id: 30, station: 4, name: "Kents Cavern Prehistoric Caves", area: "Torquay", tag: "Familie", desc: "Älteste Steinzeithöhle Großbritanniens." },
-            { id: 31, station: 4, name: "Cockington Village", area: "Torquay", tag: "Geheimtipp", desc: "Idyllisches Dorf wie aus dem Märchenbuch." },
-            { id: 32, station: 4, name: "Haytor Rocks & Dartmoor Ponies", area: "Dartmoor", tag: "Highlight", desc: "Granitfelsen besteigen & wildlebende Ponys treffen." },
-            { id: 33, station: 4, name: "Postbridge Clapper Bridge", area: "Dartmoor", tag: "Natur", desc: "Uralte Steinplattenbrücke im Nationalpark." },
-            { id: 34, station: 4, name: "Castle Drogo", area: "Dartmoor", tag: "Kultur", desc: "Das letzte in England erbaute Schloss." },
-            { id: 35, station: 4, name: "Lydford Gorge & White Lady Waterfall", area: "Dartmoor", tag: "Natur", desc: "Tiefe Waldschlucht mit 30m Wasserfall." },
-
-            // Etappe 5
-            { id: 36, station: 5, name: "Salcombe Harbour & Bootstour", area: "Salcombe", tag: "Natur", desc: "Malerischer Küstenort mit klarem Wasser." },
-            { id: 37, station: 5, name: "Overbeck's Garden (National Trust)", area: "Salcombe", tag: "Geheimtipp", desc: "Exotischer Klippengarten mit Palmen." },
-            { id: 38, station: 5, name: "Hope Cove & Coast Path Wanderung", area: "Salcombe", tag: "Natur", desc: "Traumhafte Küstenwanderung." },
-            { id: 39, station: 5, name: "The Lost Gardens of Heligan", area: "Heligan", tag: "Highlight", desc: "Verzauberte Dschungel-Gärten mit Moosskulpturen." },
-
-            // Etappe 6
-            { id: 40, station: 6, name: "St Michael's Mount", area: "Penzance/Falmouth", tag: "Highlight", desc: "Inselburg, die bei Ebbe zu Fuß erreichbar ist." },
-            { id: 41, station: 6, name: "Pendennis Castle", area: "Falmouth", tag: "Familie", desc: "Tudor-Festung Heinrichs VIII. direkt am Meer." },
-            { id: 42, station: 6, name: "National Maritime Museum Cornwall", area: "Falmouth", tag: "Familie", desc: "Erlebnismuseum rund um Schiffe & Ozeane." },
-            { id: 43, station: 6, name: "Trebah Garden", area: "Falmouth", tag: "Natur", desc: "Subtropischer Schluchtgarten mit privatem Strand." },
-            { id: 44, station: 6, name: "Minack Theatre", area: "Cornwall", tag: "Highlight", desc: "Spektakuläres Freilichttheater direkt in die Klippen gebaut." },
-            { id: 45, station: 6, name: "Land's End Landmark", area: "Cornwall", tag: "Highlight", desc: "Westlichster Punkt Englands mit Erlebnispark." },
-            { id: 46, station: 6, name: "Porthcurno Beach", area: "Cornwall", tag: "Natur", desc: "Karibikähnlicher Strand mit türkisblauem Wasser." },
-            { id: 47, station: 6, name: "St. Ives Town, Tate & Beaches", area: "St. Ives", tag: "Highlight", desc: "Künstlerstadt mit wunderschönen Sandstränden." },
-
-            // Etappe 7
-            { id: 48, station: 7, name: "Tintagel Castle & Merlin's Cave", area: "Tintagel", tag: "Highlight", desc: "Mythenumwobene König-Artus-Burg auf Felsen." },
-            { id: 49, station: 7, name: "Boscastle Harbour", area: "Tintagel", tag: "Geheimtipp", desc: "Einzigartiger natürlicher Fjord-Hafen." },
-            { id: 50, station: 7, name: "Clovelly Historic Village", area: "Clovelly", tag: "Highlight", desc: "Autofreies, steiles Fischerdorf mit Lasten-Eseln." },
-            { id: 51, station: 7, name: "Barnstaple Historic Pannier Market", area: "Barnstaple", tag: "Kultur", desc: "Überdeckter historischer Marktplatz." },
-
-            // Etappe 8
-            { id: 52, station: 8, name: "Valley of Rocks & Lynton Cliff Railway", area: "Exmoor", tag: "Highlight", desc: "Wilde Felslandschaft mit Ziegen & historische Standseilbahn." },
-            { id: 53, station: 8, name: "Dunster Castle & Steam Railway", area: "Exmoor", tag: "Kultur", desc: "Schloss mit Parkanlage & Museumsdampfzug." },
-            { id: 54, station: 8, name: "Tarr Steps Ancient Clapper Bridge", area: "Exmoor", tag: "Geheimtipp", desc: "Uralte Steinbrücke mitten im Fluss." },
-            { id: 55, station: 8, name: "Cheddar Gorge & Caves", area: "Somerset", tag: "Highlight", desc: "Englands tiefste Schlucht mit Tropfsteinhöhlen." },
-            { id: 56, station: 8, name: "Bath Roman Baths & Abbey", area: "Somerset", tag: "Highlight", desc: "Antike römische Bäder in UNESCO-Welterbestadt." },
-            { id: 57, station: 8, name: "Stratford-upon-Avon & Shakespeare's House", area: "Stratford", tag: "Kultur", desc: "Geburtsort von Shakespeare mit Fachwerkflair." },
-            { id: 58, station: 8, name: "Warwick Castle", area: "Stratford", tag: "Highlight", desc: "Erlebnisburg mit Ritterturnieren & Shows." },
-
-            // Etappe 9
-            { id: 59, station: 9, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge)." },
-
-            // Etappe 10 - London (Städtetrip, Harry-Potter-Fokus)
-            { id: 60, station: 10, name: "Warner Bros. Studio Tour London", area: "Leavesden", tag: "Highlight", desc: "HP-Drehort: Original-Filmsets - Große Halle, Winkelgasse, Gringotts & Gleis 9¾ mit Dampfzug." },
-            { id: 61, station: 10, name: "House of MinaLima", area: "Soho", tag: "Geheimtipp", desc: "HP-Drehort-Bezug: Galerie der Filmgrafiker (Karte des Rumtreibers, Tagesprophet) - Eintritt frei." },
-            { id: 62, station: 10, name: "Leadenhall Market", area: "City of London", tag: "Kultur", desc: "HP-Drehort: viktorianische Halle als Winkelgasse & Bull's Head Passage als Tropfender Kessel (Film 1)." },
-            { id: 63, station: 10, name: "Borough Market & Stoney Street", area: "Southwark", tag: "Familie", desc: "HP-Drehort: Eingang Tropfender Kessel (Gefangener von Askaban) + Traditions-Streetfood-Markt." },
-            { id: 64, station: 10, name: "Cecil Court", area: "West End", tag: "Geheimtipp", desc: "HP-Vorbild: Antiquariats-Gasse, optische Inspiration für die Winkelgasse." },
-            { id: 65, station: 10, name: "Gleis 9 ¾ (King's Cross Station)", area: "King's Cross", tag: "Familie", desc: "HP-Drehort: Foto am Gepäckwagen in der Mauer & offizieller Harry-Potter-Store." },
-            { id: 66, station: 10, name: "Millennium Bridge", area: "Bankside", tag: "Kultur", desc: "HP-Drehort: Todesser-Angriff aus dem Halbblutprinzen; freier Blick auf St. Paul's." },
-            { id: 67, station: 10, name: "Tower of London", area: "City of London", tag: "Highlight", desc: "900 Jahre Historie: Kronjuwelen, White Tower, Raben & Beefeater-Führungen." },
-            { id: 68, station: 10, name: "Tower Bridge", area: "City of London", tag: "Highlight", desc: "Ikonische viktorianische Klappbrücke über die Themse." },
-            { id: 69, station: 10, name: "Westminster Abbey", area: "Westminster", tag: "Kultur", desc: "Gotische Krönungskirche der britischen Monarchie." },
-            { id: 70, station: 10, name: "Big Ben & Houses of Parliament", area: "Westminster", tag: "Highlight", desc: "Wahrzeichen-Glockenturm & Palace of Westminster an der Themse." },
-            { id: 71, station: 10, name: "St. Pancras International", area: "King's Cross", tag: "Kultur", desc: "HP-Drehort: neugotische Fassade als Kulisse für den fliegenden Ford Anglia (Kammer des Schreckens)." },
-            { id: 72, station: 10, name: "Covent Garden", area: "West End", tag: "Familie", desc: "Lebhaftes Markt- & Platzensemble mit Straßenkünstlern." },
-            { id: 73, station: 10, name: "Themsefahrt mit Uber Boat (Thames Clippers)", area: "Themse", tag: "Familie", desc: "Linienboot Tower Pier - Westminster: Skyline-Panorama an Shard, Tate Modern & London Eye vorbei." },
-            { id: 74, station: 10, name: "St. Paul's Cathedral", area: "City of London", tag: "Kultur", desc: "Barocke Kuppelkathedrale von Christopher Wren." }
+        // --- UNTERKÜNFTE (Erst-Seed) ---
+        // Ein Eintrag pro Übernachtungs-Aufenthalt (nicht pro Etappe): Dover kommt 2×,
+        // Dorset gar nicht (nur Transfer-Stopps). Preis = Gesamtpreis in €, nicht pro Nacht.
+        // Seed nur bei leerer Liste; danach ist die App (Firebase/localStorage) die Wahrheit.
+        const SEED_STAYS = [
+            { id: "stay-1", order: 1, base: "Dover",                                nights: 1, dates: "So 27.06",          name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-2", order: 2, base: "London",                               nights: 3, dates: "Mo–Mi 28.–30.06",   name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-3", order: 3, base: "Cotswolds & Warwickshire",             nights: 2, dates: "Do–Fr 01.–02.07",   name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-4", order: 4, base: "Bath & Somerset",                      nights: 2, dates: "Sa–So 03.–04.07",   name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-5", order: 5, base: "Tintagel (Nord-Cornwall)",             nights: 1, dates: "Mo 05.07",          name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-6", order: 6, base: "Cornwall-Westspitze (Penzance/St Ives)", nights: 3, dates: "Di–Do 06.–08.07", name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-7", order: 7, base: "South Devon / Dartmoor",               nights: 2, dates: "Fr–Sa 09.–10.07",   name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-8", order: 8, base: "Isle of Wight",                        nights: 2, dates: "So–Mo 11.–12.07",   name: "", price: "", url: "", mapsUrl: "" },
+            { id: "stay-9", order: 9, base: "Dover (Rückreise)",                    nights: 1, dates: "Di 13.07",          name: "", price: "", url: "", mapsUrl: "" }
         ];
 
         // Global State
         let poiRatings = {};
         let poiData = {};        // Map { id: {id, station, name, area, tag, desc, skip} }
+        let accommodations = {}; // Map { stayId: {id, order, base, nights, dates, name, price, url, mapsUrl} }
         let db = null;
         let unsubscribe = null;
         let unsubscribePois = null;
+        let unsubscribeStays = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalPois();
             loadLocalData();
+            loadLocalStays();
             initFirebaseIfAvailable();
             renderTable();
+            renderStays();
         });
 
         // --- Bewertungen (unverändert, per id verknüpft) ---
@@ -369,7 +403,7 @@
             const map = {};
             arr.forEach(p => {
                 const key = String(p.id);
-                map[key] = { id: key, station: p.station, name: p.name, area: p.area, tag: p.tag, desc: p.desc, skip: false };
+                map[key] = { id: key, station: p.station, name: p.name, area: p.area, tag: p.tag, desc: p.desc, skip: p.skip || false };
             });
             return map;
         }
@@ -473,6 +507,7 @@
                     updateSyncBadge("🟢 Echtzeit-Sync aktiv", "bg-emerald-500");
                     subscribeToCloud();
                     subscribeToPoisCloud();
+                    subscribeToStaysCloud();
                 }).catch(err => {
                     console.error("Auth error:", err);
                     updateSyncBadge("🔴 Sync-Fehler", "bg-rose-500");
@@ -733,7 +768,7 @@
                 document.getElementById("poi-name").value = "";
                 document.getElementById("poi-area").value = "";
                 document.getElementById("poi-tag").value = "Familie";
-                document.getElementById("poi-station").value = "11";
+                document.getElementById("poi-station").value = "2";
                 document.getElementById("poi-desc").value = "";
             }
             document.getElementById("poi-modal").classList.remove("hidden");
@@ -797,6 +832,158 @@
             }
             renderTable();
             showToast("🗑️ POI gelöscht");
+        };
+
+        // --- UNTERKÜNFTE (Aufenthalte) ---
+        function seedStaysFromArray(arr) {
+            const map = {};
+            arr.forEach(s => { map[s.id] = { ...s }; });
+            return map;
+        }
+
+        function loadLocalStays() {
+            const stored = localStorage.getItem("suedengland_accommodations");
+            if (stored) {
+                try { accommodations = JSON.parse(stored); } catch (e) { accommodations = {}; }
+            }
+            if (!accommodations || Object.keys(accommodations).length === 0) {
+                accommodations = seedStaysFromArray(SEED_STAYS);
+                saveLocalStays();
+            }
+        }
+
+        function saveLocalStays() {
+            localStorage.setItem("suedengland_accommodations", JSON.stringify(accommodations));
+        }
+
+        // Sortierung nach order-Feld (neue Einträge ans Ende).
+        function getStaysArray() {
+            return Object.values(accommodations).sort((a, b) => (Number(a.order) || 999) - (Number(b.order) || 999));
+        }
+
+        async function persistStayRemote(id) {
+            if (!db) return;
+            const ref = doc(db, "suedengland", "accommodations");
+            await setDoc(ref, { [id]: accommodations[id] }, { merge: true });
+        }
+
+        async function removeStayRemote(id) {
+            if (!db) return;
+            const ref = doc(db, "suedengland", "accommodations");
+            await updateDoc(ref, { [id]: deleteField() });
+        }
+
+        function subscribeToStaysCloud() {
+            if (!db) return;
+            const ref = doc(db, "suedengland", "accommodations");
+            unsubscribeStays = onSnapshot(ref, (snapshot) => {
+                if (snapshot.exists() && Object.keys(snapshot.data()).length > 0) {
+                    accommodations = snapshot.data();
+                    saveLocalStays();
+                    renderStays();
+                } else {
+                    // Cloud noch leer -> mit lokaler (geseedeter) Liste befüllen
+                    setDoc(ref, accommodations, { merge: true }).catch(e => console.error("Stay-Seed fehlgeschlagen:", e));
+                }
+            }, (error) => {
+                console.error("Firestore Stay error:", error);
+            });
+        }
+
+        window.renderStays = function() {
+            const tbody = document.getElementById("stay-table-body");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+            let total = 0;
+            let rowNum = 0;
+
+            getStaysArray().forEach((s) => {
+                rowNum++;
+                const priceNum = parseFloat(s.price);
+                if (!isNaN(priceNum)) total += priceNum;
+
+                const idJs = String(s.id).replace(/'/g, "\\'");
+                const esc = (v) => String(v == null ? "" : v).replace(/"/g, "&quot;");
+                const mapsHref = s.mapsUrl
+                    ? s.mapsUrl
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((s.name || s.base || '') + ' England')}`;
+                const webHref = s.url ? (s.url.startsWith('http') ? s.url : 'https://' + s.url) : '';
+
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50/80 transition text-slate-700";
+                tr.innerHTML = `
+                    <td class="p-3 text-center text-xs font-mono text-slate-400">${rowNum}</td>
+                    <td class="p-3">
+                        <input type="text" value="${esc(s.base)}" onchange="updateStay('${idJs}', 'base', this.value)" class="w-full p-1 border border-slate-200 rounded text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="0" value="${esc(s.nights)}" onchange="updateStay('${idJs}', 'nights', this.value)" class="w-12 text-center p-1 border rounded text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                    <td class="p-3 text-xs text-slate-500 whitespace-nowrap">${s.dates || ''}</td>
+                    <td class="p-3">
+                        <input type="text" value="${esc(s.name)}" placeholder="Hotel / Ferienwohnung..." onchange="updateStay('${idJs}', 'name', this.value)" class="w-full p-1 border border-slate-200 rounded text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center gap-1">
+                            <span class="text-slate-400 text-xs">€</span>
+                            <input type="number" min="0" step="0.01" value="${esc(s.price)}" placeholder="0" onchange="updateStay('${idJs}', 'price', this.value)" class="w-24 text-right p-1 border rounded text-sm font-semibold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="text" value="${esc(s.url)}" placeholder="URL" onchange="updateStay('${idJs}', 'url', this.value)" class="w-full p-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none mb-1">
+                        ${webHref ? `<a href="${webHref}" target="_blank" class="text-indigo-600 hover:underline text-xs font-medium">🔗 öffnen</a>` : `<span class="text-slate-300 text-xs">—</span>`}
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="text" value="${esc(s.mapsUrl)}" placeholder="Maps-Link" onchange="updateStay('${idJs}', 'mapsUrl', this.value)" class="w-full p-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none mb-1">
+                        <a href="${mapsHref}" target="_blank" class="inline-flex items-center justify-center px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded text-xs font-medium border border-rose-200 transition">📍 Karte</a>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteStay('${idJs}')" title="Aufenthalt löschen" class="px-1.5 py-1 hover:bg-rose-50 rounded transition">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("stay-total").innerText = "€ " + total.toLocaleString("de-DE", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        };
+
+        window.updateStay = async function(id, field, val) {
+            if (!accommodations[id]) return;
+            accommodations[id][field] = val;
+            saveLocalStays();
+            if (db) {
+                try {
+                    await persistStayRemote(id);
+                    showToast("☁️ Unterkunft gespeichert!");
+                } catch (e) {
+                    console.error("Stay-Cloud-Fehler:", e);
+                    showToast("⚠️ Lokal gespeichert (Cloud-Fehler)");
+                }
+            } else {
+                showToast("💾 Lokal gespeichert!");
+            }
+            renderStays();
+        };
+
+        window.addStay = async function() {
+            const maxOrder = Object.values(accommodations).reduce((m, s) => Math.max(m, Number(s.order) || 0), 0);
+            const id = `stay-custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+            accommodations[id] = { id, order: maxOrder + 1, base: "", nights: "", dates: "", name: "", price: "", url: "", mapsUrl: "" };
+            saveLocalStays();
+            try { await persistStayRemote(id); } catch (e) { console.error(e); }
+            renderStays();
+            showToast("➕ Aufenthalt hinzugefügt");
+        };
+
+        window.deleteStay = async function(id) {
+            const s = accommodations[id];
+            if (!s) return;
+            if (!confirm(`Aufenthalt "${s.base || s.name || id}" wirklich löschen?`)) return;
+            delete accommodations[id];
+            saveLocalStays();
+            try { await removeStayRemote(id); } catch (e) { console.error(e); }
+            renderStays();
+            showToast("🗑️ Aufenthalt gelöscht");
         };
 
         function showToast(msg) {
