@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>England Reise 2027 - POI Bewertungstabelle</title>
+    <title>Algarve Reise 2026 - POI Bewertungstabelle</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,14 +21,14 @@
     <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
             <div>
-                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">🇬🇧 England Reise 2027</h1>
-                <p class="text-xs sm:text-sm text-slate-300">Bewertungstabelle & Routenplaner (Familie: 2 Erwachsene, 2 Kinder - 12 & 9 J.)</p>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">🇵🇹 Algarve Reise 2026</h1>
+                <p class="text-xs sm:text-sm text-slate-300">Bewertungstabelle & Ausflugsplaner (2 Erwachsene, 2 Kinder – 8 & 11 J.) · Basis: Adriana Beach Club, Falésia · 03.–16.10.2026</p>
             </div>
-            
+
             <div class="flex flex-wrap items-center gap-3">
-                <!-- Wechsel zur Algarve-Reise -->
-                <a href="algarve.html" class="px-3 py-1.5 text-xs font-medium bg-slate-700 hover:bg-slate-600 rounded-lg transition shadow" title="Zur Algarve-Reise wechseln">
-                    ↔ Algarve-Reise
+                <!-- Wechsel zur England-Reise -->
+                <a href="index.html" class="px-3 py-1.5 text-xs font-medium bg-slate-700 hover:bg-slate-600 rounded-lg transition shadow" title="Zur England-Reise wechseln">
+                    ↔ England-Reise
                 </a>
 
                 <!-- Sync Status Indicator -->
@@ -52,7 +52,7 @@
     </header>
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
+
         <!-- Filter & Search Bar -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
             <div class="w-full md:w-1/3">
@@ -60,18 +60,13 @@
             </div>
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                 <select id="station-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
-                    <option value="ALL">Alle Etappen</option>
-                    <option value="1">Etappe 1: Dover - Rye - Brighton</option>
-                    <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
-                    <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
-                    <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
-                    <option value="5">Etappe 5: Salcombe & Heligan</option>
-                    <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
-                    <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
-                    <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
-                    <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
-                    <option value="10">Etappe 10: London (Städtetrip)</option>
-                    <option value="11">Etappe 11: Eigene POIs</option>
+                    <option value="ALL">Alle Regionen</option>
+                    <option value="1">Region 1: Zentral (nahe Resort)</option>
+                    <option value="2">Region 2: Barrocal (Hinterland)</option>
+                    <option value="3">Region 3: Barlavento (West-Felsküste)</option>
+                    <option value="4">Region 4: Sotavento (Ost-Lagune)</option>
+                    <option value="5">Region 5: Costa Vicentina (SW-Spitze)</option>
+                    <option value="6">Region 6: Eigene POIs</option>
                 </select>
                 <select id="tag-filter" onchange="filterPOIs()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
                     <option value="ALL">Alle Kategorien</option>
@@ -91,7 +86,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Gesamt POIs</div>
-                <div id="stat-total" class="text-2xl font-bold text-slate-800">74</div>
+                <div id="stat-total" class="text-2xl font-bold text-slate-800">13</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-xs text-slate-500 font-medium">Bewertet</div>
@@ -117,8 +112,8 @@
                             <th class="p-3 w-28">Kategorie</th>
                             <th class="p-3 text-center w-20">Erw. 1</th>
                             <th class="p-3 text-center w-20">Erw. 2</th>
-                            <th class="p-3 text-center w-20">Kind 1 (12J)</th>
-                            <th class="p-3 text-center w-20">Kind 2 (9J)</th>
+                            <th class="p-3 text-center w-20">Kind 1 (11J)</th>
+                            <th class="p-3 text-center w-20">Kind 2 (8J)</th>
                             <th class="p-3 text-center w-20 bg-slate-200/60">Ø Schnitt</th>
                             <th class="p-3 min-w-[180px]">Notizen / Anmerkungen</th>
                             <th class="p-3 text-center w-24">Karte</th>
@@ -147,7 +142,7 @@
   "messagingSenderId": "...",
   "appId": "..."
 }'></textarea>
-            
+
             <div id="modal-msg" class="text-xs mb-4 hidden"></div>
 
             <div class="flex justify-between items-center gap-2">
@@ -175,12 +170,12 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Name <span class="text-rose-500">*</span></label>
-                    <input type="text" id="poi-name" placeholder="z. B. London Eye" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    <input type="text" id="poi-name" placeholder="z. B. Praia da Marinha" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">Ort / Standort</label>
-                        <input type="text" id="poi-area" placeholder="z. B. South Bank" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        <input type="text" id="poi-area" placeholder="z. B. Carvoeiro" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">Kategorie</label>
@@ -194,19 +189,14 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Etappe</label>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Region</label>
                     <select id="poi-station" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                        <option value="1">Etappe 1: Dover - Rye - Brighton</option>
-                        <option value="2">Etappe 2: Isle of Wight - Bournemouth</option>
-                        <option value="3">Etappe 3: Jurassic Coast & Dorset</option>
-                        <option value="4">Etappe 4: Exeter, Torquay & Dartmoor</option>
-                        <option value="5">Etappe 5: Salcombe & Heligan</option>
-                        <option value="6">Etappe 6: Penzance & Cornwall Südküste</option>
-                        <option value="7">Etappe 7: Tintagel, Clovelly & Barnstaple</option>
-                        <option value="8">Etappe 8: Exmoor, Somerset & Stratford</option>
-                        <option value="9">Etappe 9: Gloucester Cathedral & Rückfahrt</option>
-                        <option value="10">Etappe 10: London (Städtetrip)</option>
-                        <option value="11" selected>Etappe 11: Eigene POIs</option>
+                        <option value="1">Region 1: Zentral (nahe Resort)</option>
+                        <option value="2">Region 2: Barrocal (Hinterland)</option>
+                        <option value="3">Region 3: Barlavento (West-Felsküste)</option>
+                        <option value="4">Region 4: Sotavento (Ost-Lagune)</option>
+                        <option value="5">Region 5: Costa Vicentina (SW-Spitze)</option>
+                        <option value="6" selected>Region 6: Eigene POIs</option>
                     </select>
                 </div>
                 <div>
@@ -240,100 +230,31 @@
         // Diese Liste dient nur noch als einmaliger Seed. Sobald sie nach
         // localStorage/Firebase migriert wurde, ist die App die Wahrheit;
         // spätere Änderungen an diesem Array erscheinen NICHT mehr automatisch.
+        // Quelle: Google-Doc „Familienausflüge Algarve Ab Albufeira".
+        // Konvention: Fahrzeit ab Resort + kritischer Planungshinweis vorangestellt.
         const SEED_POIS = [
-            // Etappe 1
-            { id: 1, station: 1, name: "Dover Castle & Secret Wartime Tunnels", area: "Dover", tag: "Highlight", desc: "Mächtige Burg & unterirdische Weltkriegstunnel." },
-            { id: 2, station: 1, name: "White Cliffs of Dover (South Foreland Lighthouse)", area: "Dover", tag: "Natur", desc: "Spaziergang entlang der berühmten Kreidefelsen." },
-            { id: 3, station: 1, name: "Rye Historic Town & Mermaid Street", area: "Rye", tag: "Kultur", desc: "Kopfsteinpflaster, Fachwerkhäuser & Schmugglergeschichte." },
-            { id: 4, station: 1, name: "Camber Sands Beach", area: "Rye", tag: "Familie", desc: "Riesiger Sandstrand mit Dünenlandschaft." },
-            { id: 5, station: 1, name: "Bodiam Castle", area: "Rye", tag: "Highlight", desc: "Märchenhafte Wasserburg mit Wassergraben." },
-            { id: 6, station: 1, name: "Dungeness Nature Reserve & Miniature Railway", area: "Rye", tag: "Geheimtipp", desc: "Kurioses Kieselstein-Kap & Minidampfbahn." },
-            { id: 7, station: 1, name: "Royal Pavilion Brighton", area: "Brighton", tag: "Kultur", desc: "Exotischer Palast im indisch-chinesischen Stil." },
-            { id: 8, station: 1, name: "Brighton Palace Pier & Seafront", area: "Brighton", tag: "Familie", desc: "Klassischer britischer Pier mit Fahrgeschäften." },
-            { id: 9, station: 1, name: "British Airways i360 Lookout", area: "Brighton", tag: "Highlight", desc: "Gläserner Aussichtsturm mit Rundumblick." },
-            { id: 10, station: 1, name: "Seven Sisters Country Park & Birling Gap", area: "Brighton", tag: "Natur", desc: "Spektakuläre Kreidefelsenküste." },
-            { id: 11, station: 1, name: "Devil's Dyke (South Downs)", area: "Brighton", tag: "Geheimtipp", desc: "Tiefes Trockental mit toller Aussicht & Drachenfliegern." },
+            // Region 1 - Zentral (nahe Resort)
+            { id: 1, station: 1, name: "Parque Aventura Albufeira", area: "Santa Eulália", tag: "Familie", desc: "🚗 15 min · ⚠️ Okt nur Sa/So ab 10:00 (werktags erst 14:00), Reservierung; Mindestgröße 1,30 m / 1,40 m. Hochseilgarten im Pinienwald, durchgehende Clic-It-Sicherung." },
+            { id: 2, station: 1, name: "Zoomarine Algarve", area: "Guia", tag: "Familie", desc: "🚗 25 min · ⚠️ Di–Sa 10–17, So/Mo im Okt geschlossen. Meeres-Themenpark: Delfin-/Robbenshows, Großaquarium, Fahrgeschäfte, kaum Wartezeiten." },
 
-            // Etappe 2
-            { id: 12, station: 2, name: "The Needles Landmark & Chairlift", area: "Isle of Wight", tag: "Highlight", desc: "Felsnadeln im Meer & Sesselbahn zum Buntstrand." },
-            { id: 13, station: 2, name: "Carisbrooke Castle & Esel-Brunnen", area: "Isle of Wight", tag: "Familie", desc: "Historische Burg mit berühmten Tret-Eseln." },
-            { id: 14, station: 2, name: "Osborne House", area: "Isle of Wight", tag: "Kultur", desc: "Sommerresidenz von Königin Victoria." },
-            { id: 15, station: 2, name: "Shanklin Chine & Old Village", area: "Isle of Wight", tag: "Natur", desc: "Malerische bewachsene Schlucht & Reetdachhäuser." },
-            { id: 16, station: 2, name: "Blackgang Chine Theme Park", area: "Isle of Wight", tag: "Familie", desc: "Ältester Freizeitpark Englands mit Dinosauriern." },
-            { id: 17, station: 2, name: "Robin Hill Country Park", area: "Isle of Wight", tag: "Familie", desc: "Abenteuerpark in der Natur mit Baumwipfelpfaden." },
-            { id: 18, station: 2, name: "Bournemouth Beach & Pier", area: "Bournemouth", tag: "Familie", desc: "Kilometerlanger goldener Sandstrand." },
-            { id: 19, station: 2, name: "Russell-Cotes Art Gallery & Museum", area: "Bournemouth", tag: "Kultur", desc: "Skurrile Jugendstil-Villa voller Weltreise-Schätze." },
-            { id: 20, station: 2, name: "Hengistbury Head", area: "Bournemouth", tag: "Natur", desc: "Naturschutzgebiet mit Blick auf die Isle of Wight." },
+            // Region 2 - Barrocal (Hinterland)
+            { id: 3, station: 2, name: "Salzbergwerk Loulé (Mina de Sal-Gema)", area: "Loulé", tag: "Geheimtipp", desc: "🚗 25–30 min · ⚠️ Reservierung obligatorisch, geschlossene Schuhe, ab 6 J.; 23 °C konstant = Schlechtwetter-Alternative. 230 m Schachtfahrt, 1,3 km Stollen im Salzstock." },
+            { id: 4, station: 2, name: "Alte & Wasserfall Queda do Vigário", area: "Alte", tag: "Natur", desc: "🚗 30–35 min · frei zugänglich, festes Schuhwerk. Quellbecken Fonte Grande unter Platanen + 24 m Wasserfall im Karst-Hinterland." },
 
-            // Etappe 3
-            { id: 21, station: 3, name: "Old Harry Rocks", area: "Jurassic Coast", tag: "Highlight", desc: "Markante Kreidesäulen im Meer nahe Swanage." },
-            { id: 22, station: 3, name: "Corfe Castle", area: "Jurassic Coast", tag: "Highlight", desc: "Dramatische Burgruine auf einem Hügel." },
-            { id: 23, station: 3, name: "Lulworth Cove & Durdle Door", area: "Jurassic Coast", tag: "Highlight", desc: "Das berühmte natürliche Felsentor & Traumbucht." },
-            { id: 24, station: 3, name: "Kimmeridge Bay & Fossiliensuche", area: "Jurassic Coast", tag: "Geheimtipp", desc: "Paradies für Fossiliensucher & Schnorchler." },
-            { id: 25, station: 3, name: "Dorset Museum & Dinosaur Safari", area: "Dorset", tag: "Familie", desc: "Spannendes Museum zur Urzeitgeschichte." },
-            { id: 26, station: 3, name: "Cerne Abbas Giant", area: "Dorset", tag: "Geheimtipp", desc: "Mysteröse gigantische Scharrbild-Figur im Rasen." },
-            { id: 27, station: 3, name: "Abbotsbury Subtropical Gardens & Swannery", area: "Dorset", tag: "Familie", desc: "Tropenpark & die einzige Schwanenkolonie der Welt." },
+            // Region 3 - Barlavento (West-Felsküste)
+            { id: 5, station: 3, name: "Castelo de Silves", area: "Silves", tag: "Kultur", desc: "🚗 35 min · täglich ab 09:00, Vormittagsschatten. Größte Wehranlage der Algarve aus rotem Sandstein, begehbare Zinnenmauern, Zisterne aus dem 11. Jh." },
+            { id: 6, station: 3, name: "Algar Seco & Passadiços Carvoeiro", area: "Carvoeiro", tag: "Natur", desc: "🚗 35–40 min · ⚠️ vor 10:00 wegen Parkraum, Trittsicherheit nötig. 570 m Holzsteg, Felsenfenster „A Boneca“, meerwassergefüllte Gezeitenpools." },
+            { id: 7, station: 3, name: "Grotte von Benagil (Bootstour)", area: "Benagil", tag: "Highlight", desc: "🚗 35–40 min · ⚠️ ruhige See vormittags 09–11; Anlande-/Schwimmverbot. RIB-Boot ab Albufeira, Einfahrt in den Felsdom mit Blick auf den Oculus." },
+            { id: 8, station: 3, name: "Ponta da Piedade (Klippenstege)", area: "Lagos", tag: "Natur", desc: "🚗 50–55 min · vormittags bestes Licht, Parkplatz am Leuchtturm früh anfahren. 2024 erneuerte Passadiços, Felsbögen, Grotten, Buchten." },
+            { id: 9, station: 3, name: "Lagos Altstadt & Forte da Ponta da Bandeira", area: "Lagos", tag: "Kultur", desc: "🚗 50–55 min · gut mit Ponta da Piedade kombinierbar. Seefahrerstadt Heinrichs d. Seefahrers, Forte an der Bensafrim-Mündung, Stadtmauern, Marina." },
 
-            // Etappe 4
-            { id: 28, station: 4, name: "Exeter Cathedral & Underground Passages", area: "Exeter", tag: "Kultur", desc: "Gotische Kathedrale & geheimnisvolle Tunnel." },
-            { id: 29, station: 4, name: "Torquay Harbour & Babbacombe Model Village", area: "Torquay", tag: "Familie", desc: "Miniaturdorf mit riesigen Gartenanlagen." },
-            { id: 30, station: 4, name: "Kents Cavern Prehistoric Caves", area: "Torquay", tag: "Familie", desc: "Älteste Steinzeithöhle Großbritanniens." },
-            { id: 31, station: 4, name: "Cockington Village", area: "Torquay", tag: "Geheimtipp", desc: "Idyllisches Dorf wie aus dem Märchenbuch." },
-            { id: 32, station: 4, name: "Haytor Rocks & Dartmoor Ponies", area: "Dartmoor", tag: "Highlight", desc: "Granitfelsen besteigen & wildlebende Ponys treffen." },
-            { id: 33, station: 4, name: "Postbridge Clapper Bridge", area: "Dartmoor", tag: "Natur", desc: "Uralte Steinplattenbrücke im Nationalpark." },
-            { id: 34, station: 4, name: "Castle Drogo", area: "Dartmoor", tag: "Kultur", desc: "Das letzte in England erbaute Schloss." },
-            { id: 35, station: 4, name: "Lydford Gorge & White Lady Waterfall", area: "Dartmoor", tag: "Natur", desc: "Tiefe Waldschlucht mit 30m Wasserfall." },
+            // Region 4 - Sotavento (Ost-Lagune)
+            { id: 10, station: 4, name: "Praia do Barril & Ankerfriedhof", area: "Tavira", tag: "Familie", desc: "🚗 45–50 min · Parken Pedras d'El Rei; Schmalspurbahn pendelt, tideunabhängig, flacher Einstieg. 200+ Thunfischanker im Dünensand (Cemitério das Âncoras)." },
+            { id: 11, station: 4, name: "Cacela Velha & Lagune", area: "Cacela Velha", tag: "Geheimtipp", desc: "🚗 50–55 min · ⚠️ nur bei Niedrigwasser (Gezeitenkalender, Start ~60 min vor NW). Wattung zur Praia da Fábrica, Winkerkrabben & Muscheln; weißes Wehrdorf mit Panorama." },
 
-            // Etappe 5
-            { id: 36, station: 5, name: "Salcombe Harbour & Bootstour", area: "Salcombe", tag: "Natur", desc: "Malerischer Küstenort mit klarem Wasser." },
-            { id: 37, station: 5, name: "Overbeck's Garden (National Trust)", area: "Salcombe", tag: "Geheimtipp", desc: "Exotischer Klippengarten mit Palmen." },
-            { id: 38, station: 5, name: "Hope Cove & Coast Path Wanderung", area: "Salcombe", tag: "Natur", desc: "Traumhafte Küstenwanderung." },
-            { id: 39, station: 5, name: "The Lost Gardens of Heligan", area: "Heligan", tag: "Highlight", desc: "Verzauberte Dschungel-Gärten mit Moosskulpturen." },
-
-            // Etappe 6
-            { id: 40, station: 6, name: "St Michael's Mount", area: "Penzance/Falmouth", tag: "Highlight", desc: "Inselburg, die bei Ebbe zu Fuß erreichbar ist." },
-            { id: 41, station: 6, name: "Pendennis Castle", area: "Falmouth", tag: "Familie", desc: "Tudor-Festung Heinrichs VIII. direkt am Meer." },
-            { id: 42, station: 6, name: "National Maritime Museum Cornwall", area: "Falmouth", tag: "Familie", desc: "Erlebnismuseum rund um Schiffe & Ozeane." },
-            { id: 43, station: 6, name: "Trebah Garden", area: "Falmouth", tag: "Natur", desc: "Subtropischer Schluchtgarten mit privatem Strand." },
-            { id: 44, station: 6, name: "Minack Theatre", area: "Cornwall", tag: "Highlight", desc: "Spektakuläres Freilichttheater direkt in die Klippen gebaut." },
-            { id: 45, station: 6, name: "Land's End Landmark", area: "Cornwall", tag: "Highlight", desc: "Westlichster Punkt Englands mit Erlebnispark." },
-            { id: 46, station: 6, name: "Porthcurno Beach", area: "Cornwall", tag: "Natur", desc: "Karibikähnlicher Strand mit türkisblauem Wasser." },
-            { id: 47, station: 6, name: "St. Ives Town, Tate & Beaches", area: "St. Ives", tag: "Highlight", desc: "Künstlerstadt mit wunderschönen Sandstränden." },
-
-            // Etappe 7
-            { id: 48, station: 7, name: "Tintagel Castle & Merlin's Cave", area: "Tintagel", tag: "Highlight", desc: "Mythenumwobene König-Artus-Burg auf Felsen." },
-            { id: 49, station: 7, name: "Boscastle Harbour", area: "Tintagel", tag: "Geheimtipp", desc: "Einzigartiger natürlicher Fjord-Hafen." },
-            { id: 50, station: 7, name: "Clovelly Historic Village", area: "Clovelly", tag: "Highlight", desc: "Autofreies, steiles Fischerdorf mit Lasten-Eseln." },
-            { id: 51, station: 7, name: "Barnstaple Historic Pannier Market", area: "Barnstaple", tag: "Kultur", desc: "Überdeckter historischer Marktplatz." },
-
-            // Etappe 8
-            { id: 52, station: 8, name: "Valley of Rocks & Lynton Cliff Railway", area: "Exmoor", tag: "Highlight", desc: "Wilde Felslandschaft mit Ziegen & historische Standseilbahn." },
-            { id: 53, station: 8, name: "Dunster Castle & Steam Railway", area: "Exmoor", tag: "Kultur", desc: "Schloss mit Parkanlage & Museumsdampfzug." },
-            { id: 54, station: 8, name: "Tarr Steps Ancient Clapper Bridge", area: "Exmoor", tag: "Geheimtipp", desc: "Uralte Steinbrücke mitten im Fluss." },
-            { id: 55, station: 8, name: "Cheddar Gorge & Caves", area: "Somerset", tag: "Highlight", desc: "Englands tiefste Schlucht mit Tropfsteinhöhlen." },
-            { id: 56, station: 8, name: "Bath Roman Baths & Abbey", area: "Somerset", tag: "Highlight", desc: "Antike römische Bäder in UNESCO-Welterbestadt." },
-            { id: 57, station: 8, name: "Stratford-upon-Avon & Shakespeare's House", area: "Stratford", tag: "Kultur", desc: "Geburtsort von Shakespeare mit Fachwerkflair." },
-            { id: 58, station: 8, name: "Warwick Castle", area: "Stratford", tag: "Highlight", desc: "Erlebnisburg mit Ritterturnieren & Shows." },
-
-            // Etappe 9
-            { id: 59, station: 9, name: "Gloucester Cathedral (Harry Potter Drehort)", area: "Gloucester", tag: "Highlight", desc: "Atemberaubende Kathedrale (Drehort für Hogwarts-Gänge)." },
-
-            // Etappe 10 - London (Städtetrip, Harry-Potter-Fokus)
-            { id: 60, station: 10, name: "Warner Bros. Studio Tour London", area: "Leavesden", tag: "Highlight", desc: "HP-Drehort: Original-Filmsets - Große Halle, Winkelgasse, Gringotts & Gleis 9¾ mit Dampfzug." },
-            { id: 61, station: 10, name: "House of MinaLima", area: "Soho", tag: "Geheimtipp", desc: "HP-Drehort-Bezug: Galerie der Filmgrafiker (Karte des Rumtreibers, Tagesprophet) - Eintritt frei." },
-            { id: 62, station: 10, name: "Leadenhall Market", area: "City of London", tag: "Kultur", desc: "HP-Drehort: viktorianische Halle als Winkelgasse & Bull's Head Passage als Tropfender Kessel (Film 1)." },
-            { id: 63, station: 10, name: "Borough Market & Stoney Street", area: "Southwark", tag: "Familie", desc: "HP-Drehort: Eingang Tropfender Kessel (Gefangener von Askaban) + Traditions-Streetfood-Markt." },
-            { id: 64, station: 10, name: "Cecil Court", area: "West End", tag: "Geheimtipp", desc: "HP-Vorbild: Antiquariats-Gasse, optische Inspiration für die Winkelgasse." },
-            { id: 65, station: 10, name: "Gleis 9 ¾ (King's Cross Station)", area: "King's Cross", tag: "Familie", desc: "HP-Drehort: Foto am Gepäckwagen in der Mauer & offizieller Harry-Potter-Store." },
-            { id: 66, station: 10, name: "Millennium Bridge", area: "Bankside", tag: "Kultur", desc: "HP-Drehort: Todesser-Angriff aus dem Halbblutprinzen; freier Blick auf St. Paul's." },
-            { id: 67, station: 10, name: "Tower of London", area: "City of London", tag: "Highlight", desc: "900 Jahre Historie: Kronjuwelen, White Tower, Raben & Beefeater-Führungen." },
-            { id: 68, station: 10, name: "Tower Bridge", area: "City of London", tag: "Highlight", desc: "Ikonische viktorianische Klappbrücke über die Themse." },
-            { id: 69, station: 10, name: "Westminster Abbey", area: "Westminster", tag: "Kultur", desc: "Gotische Krönungskirche der britischen Monarchie." },
-            { id: 70, station: 10, name: "Big Ben & Houses of Parliament", area: "Westminster", tag: "Highlight", desc: "Wahrzeichen-Glockenturm & Palace of Westminster an der Themse." },
-            { id: 71, station: 10, name: "St. Pancras International", area: "King's Cross", tag: "Kultur", desc: "HP-Drehort: neugotische Fassade als Kulisse für den fliegenden Ford Anglia (Kammer des Schreckens)." },
-            { id: 72, station: 10, name: "Covent Garden", area: "West End", tag: "Familie", desc: "Lebhaftes Markt- & Platzensemble mit Straßenkünstlern." },
-            { id: 73, station: 10, name: "Themsefahrt mit Uber Boat (Thames Clippers)", area: "Themse", tag: "Familie", desc: "Linienboot Tower Pier - Westminster: Skyline-Panorama an Shard, Tate Modern & London Eye vorbei." },
-            { id: 74, station: 10, name: "St. Paul's Cathedral", area: "City of London", tag: "Kultur", desc: "Barocke Kuppelkathedrale von Christopher Wren." }
+            // Region 5 - Costa Vicentina (SW-Spitze)
+            { id: 12, station: 5, name: "Cabo de São Vicente & Fortaleza de Sagres", area: "Sagres", tag: "Highlight", desc: "🚗 1h30 (Tagesausflug) · ⚠️ Windjacke! 75 m Steilklippen an Europas Südwestspitze, lichtstärkster Leuchtturm, Windrose Rosa dos Ventos (Ø 40 m)." },
+            { id: 13, station: 5, name: "Praia da Bordeira", area: "Carrapateira", tag: "Natur", desc: "🚗 1h35 (Tagesausflug, mit Cabo/Sagres kombinierbar) · Holzstege über Wanderdünen, flache warme Flusslagune zum Waten, seeseitig Surfstrand." }
         ];
 
         // Global State
@@ -352,14 +273,14 @@
 
         // --- Bewertungen (unverändert, per id verknüpft) ---
         function loadLocalData() {
-            const stored = localStorage.getItem("suedengland_poi_ratings");
+            const stored = localStorage.getItem("algarve_poi_ratings");
             if (stored) {
                 try { poiRatings = JSON.parse(stored); } catch (e) { poiRatings = {}; }
             }
         }
 
         function saveLocalData() {
-            localStorage.setItem("suedengland_poi_ratings", JSON.stringify(poiRatings));
+            localStorage.setItem("algarve_poi_ratings", JSON.stringify(poiRatings));
             // Statistik-Kacheln werden in renderTable() aktualisiert, das nach
             // jedem Speichern aufgerufen wird.
         }
@@ -375,7 +296,7 @@
         }
 
         function loadLocalPois() {
-            const stored = localStorage.getItem("suedengland_pois");
+            const stored = localStorage.getItem("algarve_pois");
             if (stored) {
                 try { poiData = JSON.parse(stored); } catch (e) { poiData = {}; }
             }
@@ -387,7 +308,7 @@
         }
 
         function saveLocalPois() {
-            localStorage.setItem("suedengland_pois", JSON.stringify(poiData));
+            localStorage.setItem("algarve_pois", JSON.stringify(poiData));
         }
 
         // Sortierschlüssel: Basis-POIs (numerische id) zuerst, eigene (custom-<ts>) danach.
@@ -398,7 +319,7 @@
             return m ? Number(m[1]) : Number.MAX_SAFE_INTEGER;
         }
 
-        // Map -> sortiertes Array: gestrichene ans Ende, dann nach Etappe, dann Sortierschlüssel.
+        // Map -> sortiertes Array: gestrichene ans Ende, dann nach Region, dann Sortierschlüssel.
         function getPoisArray() {
             return Object.values(poiData).sort((a, b) => {
                 const sa = a.skip ? 1 : 0, sb = b.skip ? 1 : 0;
@@ -412,19 +333,19 @@
         // Cloud-Persistenz für POIs
         async function persistPoiRemote(id) {
             if (!db) return;
-            const poisRef = doc(db, "suedengland", "pois");
+            const poisRef = doc(db, "algarve", "pois");
             await setDoc(poisRef, { [id]: poiData[id] }, { merge: true });
         }
 
         async function removePoiRemote(id) {
             if (!db) return;
-            const poisRef = doc(db, "suedengland", "pois");
+            const poisRef = doc(db, "algarve", "pois");
             await updateDoc(poisRef, { [id]: deleteField() });
         }
 
         async function removeRatingRemote(id) {
             if (!db) return;
-            const ratingsRef = doc(db, "suedengland", "family_ratings");
+            const ratingsRef = doc(db, "algarve", "family_ratings");
             await updateDoc(ratingsRef, { [id]: deleteField() });
         }
 
@@ -442,13 +363,14 @@
 
         // ID der Firestore-Datenbank. Die Familien-Datenbank heißt "enland27"
         // (nicht die Standard-Datenbank "(default)"), daher muss sie explizit
-        // angesprochen werden.
+        // angesprochen werden. Algarve nutzt dieselbe DB, aber einen eigenen
+        // Collection-Namespace "algarve" (getrennt von England "suedengland").
         const DEFAULT_FIRESTORE_DATABASE_ID = "enland27";
 
         function initFirebaseIfAvailable() {
             // Manuell eingetragene Config (via Dialog) hat Vorrang als Override,
             // sonst wird die fest hinterlegte Familien-Datenbank genutzt.
-            const configStr = localStorage.getItem("suedengland_custom_firebase_config");
+            const configStr = localStorage.getItem("algarve_custom_firebase_config");
             let firebaseConfig;
             let databaseId = DEFAULT_FIRESTORE_DATABASE_ID;
             if (configStr) {
@@ -486,8 +408,8 @@
 
         function subscribeToCloud() {
             if (!db) return;
-            const docRef = doc(db, "suedengland", "family_ratings");
-            
+            const docRef = doc(db, "algarve", "family_ratings");
+
             unsubscribe = onSnapshot(docRef, (snapshot) => {
                 if (snapshot.exists()) {
                     poiRatings = snapshot.data();
@@ -502,7 +424,7 @@
 
         function subscribeToPoisCloud() {
             if (!db) return;
-            const poisRef = doc(db, "suedengland", "pois");
+            const poisRef = doc(db, "algarve", "pois");
 
             unsubscribePois = onSnapshot(poisRef, (snapshot) => {
                 if (snapshot.exists() && Object.keys(snapshot.data()).length > 0) {
@@ -574,7 +496,7 @@
                 if (poi.tag === "Geheimtipp") tagColor = "bg-purple-100 text-purple-800";
                 if (poi.tag === "Natur") tagColor = "bg-emerald-100 text-emerald-800";
 
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' England')}`;
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' Algarve Portugal')}`;
                 const idJs = String(poi.id).replace(/'/g, "\\'");
                 const noteVal = (data.note || '').replace(/"/g, '&quot;');
 
@@ -643,7 +565,7 @@
             // Sync to Cloud if active
             if (db) {
                 try {
-                    const docRef = doc(db, "suedengland", "family_ratings");
+                    const docRef = doc(db, "algarve", "family_ratings");
                     await setDoc(docRef, poiRatings, { merge: true });
                     showToast("☁️ In Cloud gespeichert!");
                 } catch (e) {
@@ -658,15 +580,15 @@
         };
 
         window.exportToCSV = function() {
-            let csv = "\uFEFF"; // UTF-8 BOM
-            csv += "ID;Etappe;POI Name;Standort;Kategorie;Status;Erwachsener 1;Erwachsener 2;Kind 1 (12J);Kind 2 (9J);Durchschnitt;Notizen;Google Maps Link\n";
+            let csv = "﻿"; // UTF-8 BOM
+            csv += "ID;Region;POI Name;Standort;Kategorie;Status;Erwachsener 1;Erwachsener 2;Kind 1 (11J);Kind 2 (8J);Durchschnitt;Notizen;Google Maps Link\n";
 
             getPoisArray().forEach(poi => {
                 const data = poiRatings[poi.id] || { r1: "", r2: "", r3: "", r4: "", note: "" };
                 const nums = [parseFloat(data.r1), parseFloat(data.r2), parseFloat(data.r3), parseFloat(data.r4)].filter(n => !isNaN(n) && n > 0);
                 const avg = nums.length > 0 ? (nums.reduce((a,b) => a+b, 0) / nums.length).toFixed(1) : "";
                 const status = poi.skip ? "gestrichen" : "besucht";
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' England')}`;
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((poi.name || '') + ' ' + (poi.area || '') + ' Algarve Portugal')}`;
 
                 csv += `"${poi.id}";"${poi.station || ''}";"${(poi.name || '').replace(/"/g, '""')}";"${poi.area || ''}";"${poi.tag || ''}";"${status}";"${data.r1 || ''}";"${data.r2 || ''}";"${data.r3 || ''}";"${data.r4 || ''}";"${avg}";"${(data.note || '').replace(/"/g, '""')}";"${mapsUrl}"\n`;
             });
@@ -675,7 +597,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.setAttribute("href", url);
-            link.setAttribute("download", `suedengland_bewertungen_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `algarve_bewertungen_${new Date().toISOString().slice(0,10)}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -684,7 +606,7 @@
 
         window.openCloudConfigModal = function() {
             document.getElementById("cloud-modal").classList.remove("hidden");
-            const existing = localStorage.getItem("suedengland_custom_firebase_config");
+            const existing = localStorage.getItem("algarve_custom_firebase_config");
             if (existing) {
                 document.getElementById("firebase-config-input").value = existing;
             }
@@ -700,7 +622,7 @@
 
             try {
                 let parsed = JSON.parse(val);
-                localStorage.setItem("suedengland_custom_firebase_config", JSON.stringify(parsed));
+                localStorage.setItem("algarve_custom_firebase_config", JSON.stringify(parsed));
                 closeCloudConfigModal();
                 showToast("⚙️ Firebase Konfiguration gespeichert! Seite laedt neu...");
                 setTimeout(() => window.location.reload(), 1000);
@@ -710,7 +632,7 @@
         };
 
         window.clearCloudConfig = function() {
-            localStorage.removeItem("suedengland_custom_firebase_config");
+            localStorage.removeItem("algarve_custom_firebase_config");
             closeCloudConfigModal();
             showToast("⚪ Zurueck zum Lokal-Modus. Seite laedt neu...");
             setTimeout(() => window.location.reload(), 1000);
@@ -726,14 +648,14 @@
                 document.getElementById("poi-name").value = p.name || "";
                 document.getElementById("poi-area").value = p.area || "";
                 document.getElementById("poi-tag").value = p.tag || "Familie";
-                document.getElementById("poi-station").value = String(p.station || 11);
+                document.getElementById("poi-station").value = String(p.station || 6);
                 document.getElementById("poi-desc").value = p.desc || "";
             } else {
                 title.innerText = "➕ POI hinzufügen";
                 document.getElementById("poi-name").value = "";
                 document.getElementById("poi-area").value = "";
                 document.getElementById("poi-tag").value = "Familie";
-                document.getElementById("poi-station").value = "11";
+                document.getElementById("poi-station").value = "6";
                 document.getElementById("poi-desc").value = "";
             }
             document.getElementById("poi-modal").classList.remove("hidden");
