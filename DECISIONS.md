@@ -106,3 +106,21 @@ Anforderung: Finale Hotels/Ferienwohnungen pro Übernachtung erfassen (Name, Ges
 - `index.html`: `SEED_STAYS`, State `accommodations`, `loadLocalStays`/`saveLocalStays`/`getStaysArray`/
   `persistStayRemote`/`removeStayRemote`/`subscribeToStaysCloud`, `renderStays`/`updateStay`/`addStay`/
   `deleteStay`, neue Sektion „🛏 Unterkünfte" mit Summenzeile.
+
+---
+
+# Anreise-Kostenvergleich (Feature 5)
+
+Anforderung: Analysieren, ob sich die Reise mit dem eigenen Auto (ID.3 Leasing / Sharan privat) gegenüber
+Flug FRA↔LHR + Mietwagen lohnt. Vollständig durchgegrillt – Details siehe [KOSTENVERGLEICH.md](KOSTENVERGLEICH.md),
+Begriffe in [CONTEXT.md](CONTEXT.md).
+
+## Entscheidungen
+1. **Vergleich pro Reisevariante** (Transportmittel + eigener Zeitraum): Auto Sa 26.06.–Mi 14.07. (18 Nächte,
+   inkl. Calais-Nacht), Flug Mo 28.06.–Di 13.07. (15 Nächte). Verworfen: gleiche Reise mit neuem Flugpreis.
+2. **Nur Grenzkosten**; identische Posten (gemeinsame Nächte, IoW-Fähre, Eintritte, London-Parken) heben sich auf.
+3. **ID.3 in Gesamtsicht Familie + eigene Firma**, Leasing-Kilometer pauschal 0,10 €/km, 1 %-Regel.
+4. **Zusatznächte** (Calais + 2× Dover à 170 €) sind Grenzkosten der Auto-Variante.
+5. **Keine Monetarisierung** von Zeit/Komfort; stattdessen Faktorentabelle + Kennzahl „€ pro zusätzlichem England-Tag".
+6. **Ergebnis:** ID.3 ≈ 1.665 € · Sharan ≈ 1.690 € · Flug + Mietwagen ≈ 1.510 €. Auto ≈ 75–90 € pro
+   zusätzlichem England-Tag.
